@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <title>Twindex stats - made by a lazy man</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="center">Twindex stats - made with love by a lazy man</h1>
+    <div class="row">
+      <div class="col-6">
+        <h2>Premium price index</h2>
+        <table id="stock_price" class="table">
+          <thead>
+            <tr>
+              <th>Stock</th>
+              <th>Twindex Price</th>
+              <th>Oracle Price</th>
+              <th>Diff</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="loading">
+              <td colspan="4" style="text-align: center;">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.3.0/dist/ethers.umd.min.js" integrity="sha256-MpMcxHvgImX4Nypwk+p1BkJKZnbMSzXzIMaT0wJu4Y4=" crossorigin="anonymous"></script>
+  <script src="src/IPancakeRouter02.js"></script>
+  <script src="src/IUniswapV2Pair.js"></script>
+  <script src="src/script.js"></script>
+</body>
+</html>

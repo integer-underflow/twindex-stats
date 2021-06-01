@@ -1,0 +1,10 @@
+{
+  "name": "twindex-stats",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Ice5050 <ice50505050@hotmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.3.0"
+  }
+}
