@@ -3,6 +3,10 @@ html {
   min-height: 100%;
 }
 
+body {
+  padding-bottom: 120px;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
@@ -30,4 +34,12 @@ html {
 
 #buy_me_coffee {
   font-size: 10px;
+}
+
+.footer-content {
+  vertical-align: middle;
+  display: inline-block;
+  overflow-x: scroll;
+  white-space: nowrap;
+  max-width: 100%;
 }
