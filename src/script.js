@@ -32,16 +32,23 @@
     AAPL: '0xb91d34BCdF77E13f70AfF4d86129d13389dE0802',
   }
 
+  const DOP_PAIRS = {
+    TSLA: '0xb611aCe852f60F0ec039f851644a5bC5270AbF7b',
+    GOOGL: '0x7A00B2BB049176C9C74E5d7bF617F84dB4763aec',
+    AMZN: '0x4a1135768C6ce4b2a2F20DAc80DE661949161627',
+    AAPL: '0x2D4980c63962d4B9156a8974AEA7C7fd3121913A',
+  }
+
   const TWINDEX_POOLS = {
-    DOP_GOOGL: 8,
-    GOOGL_DOLLY: 7,
-    AAPL_DOLLY: 6,
-    AMZN_DOLLY: 5,
-    TSLA_DOLLY: 4,
-    AMZN_DOP: 3,
-    DOP_AAPL: 2,
-    TSLA_DOP: 1,
     TWIN_DOP: 0,
+    TSLA_DOP: 1,
+    DOP_AAPL: 2,
+    AMZN_DOP: 3,
+    TSLA_DOLLY: 4,
+    AMZN_DOLLY: 5,
+    AAPL_DOLLY: 6,
+    GOOGL_DOLLY: 7,
+    DOP_GOOGL: 8,
   }
   const FAIRLAUNCH = {
     address: '0xe6bE78800f25fFaE4D1db7CA6d3485629bD200Ed',
@@ -70,8 +77,9 @@
     $('#stock_price .loading').hide()
   })
 
-  Promise.all(
-    Object.entries(DOLLY_PAIRS).map(async ([token, pairAddress]) => {
+  Promise.all([
+    // Stock - DOLLY LP
+    ...Object.entries(DOLLY_PAIRS).map(async ([token, pairAddress]) => {
       const dollyPrice = await getOracleDollyPrice()
       const stockPrice = await getStockPrice(TOKENS[token], dollyPrice)
       const [stockReserve, dollyReserve] = await getReserves(pairAddress)
@@ -86,8 +94,35 @@
         Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpValue)).toFixed(2)
       )
-    })
-  ).then(() => {
+    }),
+    // Stock - DOP LP
+    ...Object.entries(DOP_PAIRS).map(async ([token, pairAddress]) => {
+      const dollyPrice = await getOracleDollyPrice()
+      const dopPrice = await getDopPrice(dollyPrice)
+      const stockPrice = await getStockPrice(TOKENS[token], dollyPrice)
+      const totalSupply = await getTotalLpSupply(pairAddress)
+      const [token0, _] = await getTokenAddressesFromPair(pairAddress)
+
+      let stockReserve, dopReserve, lpPrice
+      if (token === token0) {
+        ;[stockReserve, dopReserve] = await getReserves(pairAddress)
+        lpPrice = getLpPrice(totalSupply, stockPrice, dopPrice, stockReserve, dopReserve)
+      } else {
+        ;[dopReserve, stockReserve] = await getReserves(pairAddress)
+        lpPrice = getLpPrice(totalSupply, dopPrice, stockPrice, dopReserve, stockReserve)
+      }
+
+      const lpAmount = await getLpAmount(pairAddress, getAddressInQueryString())
+      const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
+
+      renderLpPrice(
+        token + '-DOP LP',
+        Number(ethers.utils.formatEther(lpPrice)).toFixed(2),
+        Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
+        Number(ethers.utils.formatEther(lpValue)).toFixed(2)
+      )
+    }),
+  ]).then(() => {
     $('#lp_price .loading').hide()
   })
 
@@ -120,11 +155,19 @@
   }
 
   function getPoolIdFromPairAddress(pairAddress) {
-    const token = objectFlip(DOLLY_PAIRS)[pairAddress]
+    let token = objectFlip(DOLLY_PAIRS)[pairAddress]
+    if (token) return TWINDEX_POOLS[`${token}_DOLLY`]
 
-    if (!token) return null
+    token = objectFlip(DOP_PAIRS)[pairAddress]
+    if (token) return TWINDEX_POOLS[`${token}_DOP`] || TWINDEX_POOLS[`DOP_${token}`]
 
-    return TWINDEX_POOLS[`${token}_DOLLY`]
+    return null
+  }
+
+  function getTokenFromAddress(tokenAddress) {
+    const token = objectFlip(TOKENS)[tokenAddress]
+
+    return token
   }
 
   async function getLockedTWINAmount(address) {
@@ -140,6 +183,14 @@
     const totalSupply = (await twindexPair.functions.totalSupply())[0]
 
     return totalSupply
+  }
+
+  async function getTokenAddressesFromPair(pairAddress) {
+    const twindexPair = new ethers.Contract(pairAddress, IUNISWAPV2_PAIR_ABI, provider)
+    const token0 = (await twindexPair.functions.token0())[0]
+    const token1 = (await twindexPair.functions.token1())[0]
+
+    return [token0, token1]
   }
 
   async function getReserves(pairAddress) {
@@ -159,6 +210,7 @@
 
   async function getLpAmount(pairAddress, walletAddress) {
     if (!walletAddress) return ethers.utils.parseEther('0')
+
     const twindexPair = new ethers.Contract(pairAddress, IUNISWAPV2_PAIR_ABI, provider)
     const lpAmountInWallet = (await twindexPair.functions.balanceOf(walletAddress))[0]
 
@@ -183,14 +235,22 @@
     return amountOut.mul(dollyPrice).div(ethers.utils.parseEther('1'))
   }
 
-  /**
-   *
-   * @param {BigNumber} dollyPrice dolly price (18 decimal precision) (get from getOracleDollyPrice)
-   */
   async function getTwinPrice(dollyPrice) {
+    const twinPrice = await getPriceFromTwindexRouter(dollyPrice, [TWIN.address, TOKENS.DOP, TOKENS.DOLLY])
+
+    return twinPrice
+  }
+
+  async function getDopPrice(dollyPrice) {
+    const dopPrice = await getPriceFromTwindexRouter(dollyPrice, [TOKENS.DOP, TOKENS.DOLLY])
+
+    return dopPrice
+  }
+
+  async function getPriceFromTwindexRouter(dollyPrice, path) {
     const twindexRouter = new ethers.Contract(ROUTERS.twindex.address, ROUTERS.twindex.abi, provider)
 
-    const result = await twindexRouter.functions.getAmountsOut(ethers.utils.parseEther('1'), [TWIN.address, TOKENS.DOP, TOKENS.DOLLY])
+    const result = await twindexRouter.functions.getAmountsOut(ethers.utils.parseEther('1'), path)
     const amountOut = result.amounts[result.amounts.length - 1]
 
     return amountOut.mul(dollyPrice).div(ethers.utils.parseEther('1'))
