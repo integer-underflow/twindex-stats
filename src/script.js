@@ -17,7 +17,7 @@
     AMZN: '0x1085B90544ff5C421D528aAF79Cc65aFc920aC79',
     AAPL: '0xC10b2Ce6A2BCfdFDC8100Ba1602C1689997299D3',
     DOLLY: '0xfF54da7CAF3BC3D34664891fC8f3c9B6DeA6c7A5',
-    // TODO: DOP
+    DOP: '0x844FA82f1E54824655470970F7004Dd90546bB28',
   }
 
   const TWIN = {
@@ -48,11 +48,11 @@
     abi: FAIRLAUNCH_ABI,
   }
 
-  const walletAddress = $('#wallet_address').val(getAddressInQueryString())
+  $('#wallet_address').val(getAddressInQueryString())
 
   Promise.all(
     Object.entries(TOKENS).map(async ([token, address]) => {
-      if (token === 'DOLLY') return
+      if (token === 'DOLLY' || token === 'DOP') return
 
       const dollyPrice = await getOracleDollyPrice()
       const stockPrice = await getStockPrice(address, dollyPrice)
@@ -91,8 +91,13 @@
     $('#lp_price .loading').hide()
   })
 
-  getLockedTWINAmount(getAddressInQueryString()).then((lockedAmount) => {
-    $('#locked_twin').text(Number(ethers.utils.formatEther(lockedAmount)).toFixed(2))
+  getLockedTWINAmount(getAddressInQueryString()).then(async (lockedAmount) => {
+    const amount = Number(ethers.utils.formatEther(lockedAmount)).toFixed(2)
+    const dollyPrice = await getOracleDollyPrice()
+    const twinPrice = await getTwinPrice(dollyPrice)
+    const valueInUsd = lockedAmount.mul(twinPrice).div(ethers.utils.parseEther('1'))
+
+    $('#locked_twin').text(`${amount} (${Number(ethers.utils.formatEther(valueInUsd)).toFixed(2)} USD)`)
   })
 
   function getAddressInQueryString() {
@@ -174,6 +179,19 @@
 
     const result = await twindexRouter.functions.getAmountsOut(ethers.utils.parseEther('1'), [stockAddress, TOKENS.DOLLY])
     const amountOut = result.amounts[1]
+
+    return amountOut.mul(dollyPrice).div(ethers.utils.parseEther('1'))
+  }
+
+  /**
+   *
+   * @param {BigNumber} dollyPrice dolly price (18 decimal precision) (get from getOracleDollyPrice)
+   */
+  async function getTwinPrice(dollyPrice) {
+    const twindexRouter = new ethers.Contract(ROUTERS.twindex.address, ROUTERS.twindex.abi, provider)
+
+    const result = await twindexRouter.functions.getAmountsOut(ethers.utils.parseEther('1'), [TWIN.address, TOKENS.DOP, TOKENS.DOLLY])
+    const amountOut = result.amounts[result.amounts.length - 1]
 
     return amountOut.mul(dollyPrice).div(ethers.utils.parseEther('1'))
   }
