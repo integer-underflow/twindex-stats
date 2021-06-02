@@ -153,7 +153,7 @@
   }
 
   function renderLpTotalValue(value) {
-    $('#lp_price tbody').append(`<tr><td colspan="3">Total Value</td><td>${value}</td></tr>`)
+    $('#lp_price tbody').append(`<tr class="table-secondary"><td colspan="3">Total Value</td><td>${value}</td></tr>`)
   }
 
   function renderStockDiff(token, stockPrice, oraclePrice, diff) {
