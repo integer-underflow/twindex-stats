@@ -94,6 +94,8 @@
         Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpValue)).toFixed(2)
       )
+
+      return lpValue
     }),
     // Stock - DOP LP
     ...Object.entries(DOP_PAIRS).map(async ([token, pairAddress]) => {
@@ -104,7 +106,7 @@
       const [token0, _] = await getTokenAddressesFromPair(pairAddress)
 
       let stockReserve, dopReserve, lpPrice
-      if (token === token0) {
+      if (TOKENS[token] === token0) {
         ;[stockReserve, dopReserve] = await getReserves(pairAddress)
         lpPrice = getLpPrice(totalSupply, stockPrice, dopPrice, stockReserve, dopReserve)
       } else {
@@ -121,8 +123,14 @@
         Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpValue)).toFixed(2)
       )
+
+      return lpValue
     }),
-  ]).then(() => {
+  ]).then((lpValues) => {
+    const totalValue = lpValues.reduce((sum, value) => sum.add(value))
+
+    renderLpTotalValue(Number(ethers.utils.formatEther(totalValue)).toFixed(2))
+
     $('#lp_price .loading').hide()
   })
 
@@ -142,6 +150,10 @@
 
   function renderLpPrice(pair, lpPrice, lpAmount, value) {
     $('#lp_price tbody').prepend(`<tr><td>${pair}</td><td>${lpPrice}</td><td>${lpAmount}</td><td>${value}</td></tr>`)
+  }
+
+  function renderLpTotalValue(value) {
+    $('#lp_price tbody').append(`<tr><td colspan="3">Total Value</td><td>${value}</td></tr>`)
   }
 
   function renderStockDiff(token, stockPrice, oraclePrice, diff) {
