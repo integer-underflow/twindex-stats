@@ -12,7 +12,21 @@
 
 <body>
   <div class="container py-3">
-    <h1 class="center">TWINDEX stats</h1>
+    <div class="row">
+      <div class="col-lg-6">
+        <h1>TWINDEX stats</h1>
+      </div>
+      <div class="col-lg-6">
+        <form id="wallet_address_form" class="row g-3">
+          <div class="col-10">
+            <input type="text" class="form-control" id="wallet_address" placeholder="Wallet Address">
+          </div>
+          <div class="col-2">
+            <button type="submit" class="btn btn-primary mb-2">Scan</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="row py-3">
       <div class="col-lg-6">
         <h2>Premium index</h2>
@@ -36,6 +50,31 @@
           </tbody>
         </table>
       </div>
+      <div class="col-lg-6">
+        <h2>LP Price</h2>
+        <table id="lp_price" class="table">
+          <thead>
+            <tr>
+              <th>Pair</th>
+              <th>LP Price</th>
+              <th>LP Amount You have</th>
+              <th>Total Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="loading">
+              <td colspan="4" style="text-align: center;">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-lg-6">
+        <h2>Locked TWIN: <span id="locked_twin"></span></h2>
+      </div>
     </div>
   </div>
 
@@ -49,6 +88,7 @@
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.3.0/dist/ethers.umd.min.js" integrity="sha256-MpMcxHvgImX4Nypwk+p1BkJKZnbMSzXzIMaT0wJu4Y4=" crossorigin="anonymous"></script>
   <script src="src/IPancakeRouter02.js"></script>
   <script src="src/IUniswapV2Pair.js"></script>
+  <script src="src/FairLaunch.js"></script>
   <script src="src/script.js"></script>
 </body>
 </html>
