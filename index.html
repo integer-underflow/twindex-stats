@@ -11,28 +11,43 @@
 </head>
 
 <body>
+  <nav class="navbar sticky-top navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand display-1" href="#">TWINDEX stats</a>
+      <form id="wallet_address_form" class="d-flex">
+        <input type="search" class="form-control me-2" id="wallet_address" placeholder="Wallet Address">
+        <button type="submit" class="btn btn-outline-success">Search</button>
+      </form>
+    </div>
+  </nav>
   <div class="container py-3">
-    <div class="row">
-      <div class="col-lg-6">
-        <h1>TWINDEX stats</h1>
-      </div>
-      <div class="col-lg-6">
-        <form id="wallet_address_form" class="row g-3">
-          <div class="col-lg-4">
-            <section class="locked-twin">Locked TWIN: <span id="locked_twin"></span></section>
-          </div>
-          <div class="col-lg-6">
-            <input type="text" class="form-control" id="wallet_address" placeholder="Wallet Address">
-          </div>
-          <div class="col-lg-2">
-            <button type="submit" class="btn btn-primary mb-2">Scan</button>
-          </div>
-        </form>
+    <div class="row py-3">
+      <div class="col-lg-12">
+        <h2>LP Holdings</h2>
+        <table id="lp_price" class="table">
+          <thead>
+            <tr>
+              <th>Pair</th>
+              <th class="text-end">LP Balance</th>
+              <th class="text-center">Underlying Assets</th>
+              <th class="text-end">Total Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="loading">
+              <td colspan="4" style="text-align: center;">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="row py-3">
+    <div class="row">
       <div class="col-lg-6">
-        <h2>Premium index</h2>
+        <h2>Stock Price</h2>
         <table id="stock_price" class="table">
           <thead>
             <tr>
@@ -54,26 +69,7 @@
         </table>
       </div>
       <div class="col-lg-6">
-        <h2>LP Price</h2>
-        <table id="lp_price" class="table">
-          <thead>
-            <tr>
-              <th>Pair</th>
-              <th>LP Price</th>
-              <th>LP Amount You have</th>
-              <th>Total Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="loading">
-              <td colspan="4" style="text-align: center;">
-                <div class="spinner-border" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <section class="locked-twin"><h2>Locked TWIN: <span id="locked_twin"></span></h2></section>
       </div>
     </div>
   </div>

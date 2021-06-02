@@ -18,7 +18,7 @@
     AAPL: '0xC10b2Ce6A2BCfdFDC8100Ba1602C1689997299D3',
     DOLLY: '0xfF54da7CAF3BC3D34664891fC8f3c9B6DeA6c7A5',
     DOP: '0x844FA82f1E54824655470970F7004Dd90546bB28',
-    TWIN: '0x3806aae953a3a873D02595f76C7698a57d4C7A57'
+    TWIN: '0x3806aae953a3a873D02595f76C7698a57d4C7A57',
   }
 
   const TWIN_ABI = ['function lockOf(address) external view returns (uint256 lockedAmount)']
@@ -81,15 +81,18 @@
     ...Object.entries(DOLLY_PAIRS).map(async ([token, pairAddress]) => {
       const dollyPrice = await getOracleDollyPrice()
       const stockPrice = await getTokenPriceWithDollyPair(TOKENS[token], dollyPrice)
-      const [stockReserve, dollyReserve] = await getReserves(pairAddress)
+      const [totalStockReserve, totalDollyReserve] = await getReserves(pairAddress)
       const totalSupply = await getTotalLpSupply(pairAddress)
-      const lpPrice = getLpPrice(totalSupply, stockPrice, dollyPrice, stockReserve, dollyReserve)
+      const lpPrice = getLpPrice(totalSupply, stockPrice, dollyPrice, totalStockReserve, totalDollyReserve)
       const lpAmount = await getLpAmount(pairAddress, getAddressInQueryString())
       const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
+      const [stockAmount, dollyAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDollyReserve)
 
       renderLpPrice(
-        token + '-DOLLY LP',
-        Number(ethers.utils.formatEther(lpPrice)).toFixed(2),
+        token,
+        'DOLLY',
+        Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
+        Number(ethers.utils.formatEther(dollyAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpValue)).toFixed(2)
       )
@@ -109,21 +112,24 @@
       const totalSupply = await getTotalLpSupply(pairAddress)
       const [token0, _] = await getTokenAddressesFromPair(pairAddress)
 
-      let stockReserve, dopReserve, lpPrice
+      let totalStockReserve, totalDopReserve, lpPrice
       if (TOKENS[token] === token0) {
-        ;[stockReserve, dopReserve] = await getReserves(pairAddress)
-        lpPrice = getLpPrice(totalSupply, tokenPrice, dopPrice, stockReserve, dopReserve)
+        ;[totalStockReserve, totalDopReserve] = await getReserves(pairAddress)
+        lpPrice = getLpPrice(totalSupply, tokenPrice, dopPrice, totalStockReserve, totalDopReserve)
       } else {
-        ;[dopReserve, stockReserve] = await getReserves(pairAddress)
-        lpPrice = getLpPrice(totalSupply, dopPrice, tokenPrice, dopReserve, stockReserve)
+        ;[totalDopReserve, totalStockReserve] = await getReserves(pairAddress)
+        lpPrice = getLpPrice(totalSupply, dopPrice, tokenPrice, totalDopReserve, totalStockReserve)
       }
 
       const lpAmount = await getLpAmount(pairAddress, getAddressInQueryString())
       const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
+      const [stockAmount, dopAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDopReserve)
 
       renderLpPrice(
-        token + '-DOP LP',
-        Number(ethers.utils.formatEther(lpPrice)).toFixed(2),
+        token,
+        'DOP',
+        Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
+        Number(ethers.utils.formatEther(dopAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpValue)).toFixed(2)
       )
@@ -152,12 +158,20 @@
     return urlParams.get('address')
   }
 
-  function renderLpPrice(pair, lpPrice, lpAmount, value) {
-    $('#lp_price tbody').prepend(`<tr><td>${pair}</td><td>${lpPrice}</td><td>${lpAmount}</td><td>${value}</td></tr>`)
+  function getUnderlyingAssetsOfLps(totalLpSupply, lpAmount, totalReserve0, totalReserve1) {
+    return [lpAmount.mul(totalReserve0).div(totalLpSupply), lpAmount.mul(totalReserve1).div(totalLpSupply)]
+  }
+
+  function renderLpPrice(token0Symbol, token1Symbol, token0Amount, token1Amount, lpAmount, value) {
+    $('#lp_price tbody').prepend(
+      `<tr><td>${token0Symbol}-${token1Symbol} LP</td><td class="text-end">${lpAmount} LP</td><td class="text-center">${token0Amount} ${token0Symbol} + ${token1Amount} ${token1Symbol}</td><td class="text-end">$${value}</td></tr>`
+    )
   }
 
   function renderLpTotalValue(value) {
-    $('#lp_price tbody').append(`<tr class="table-secondary"><td colspan="3">Total Value</td><td>${value}</td></tr>`)
+    $('#lp_price tbody').append(
+      `<tr class="table-secondary"><td colspan="3" class="text-end">Total Value</td><td class="text-end">$${value}</td></tr>`
+    )
   }
 
   function renderStockDiff(token, stockPrice, oraclePrice, diff) {
