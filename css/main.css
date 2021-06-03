@@ -21,7 +21,12 @@ p.locked-twin {
 }
 
 .price-card {
-  border: 1px solid #212529;
+  border: 1px solid rgba(0,0,0,0.2);
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+}
+
+.price-card .price-text {
+  font-size: 2rem;
 }
 
 .card-price-logo-container {
@@ -50,6 +55,10 @@ p.locked-twin {
   .footer {
     height: 120px;
   }
+}
+
+#twin_price, #dop_price {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 @media (min-width: 992px) {
