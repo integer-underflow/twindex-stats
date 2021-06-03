@@ -91,18 +91,20 @@
       const lockedTwin = pendingTwin.mul(80).div(100)
       const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
-      renderLpPrice(
-        token,
-        'DOLLY',
-        Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
-        Number(ethers.utils.formatEther(dollyAmount)).toFixed(2),
-        Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
-        Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
-        formatUsd(unlockedTwinValue),
-        Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
-        formatUsd(lockedTwinValue),
-        formatUsd(lpValue)
-      )
+      if (lpAmount.gt(0)) {
+        renderLpPrice(
+          token,
+          'DOLLY',
+          Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
+          Number(ethers.utils.formatEther(dollyAmount)).toFixed(2),
+          Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
+          Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
+          formatUsd(unlockedTwinValue),
+          Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
+          formatUsd(lockedTwinValue),
+          formatUsd(lpValue)
+        )
+      }
 
       return [lpValue, pendingTwin]
     }),
@@ -139,18 +141,20 @@
       const lockedTwin = pendingTwin.mul(80).div(100)
       const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
-      renderLpPrice(
-        token,
-        'DOP',
-        Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
-        Number(ethers.utils.formatEther(dopAmount)).toFixed(2),
-        Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
-        Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
-        formatUsd(unlockedTwinValue),
-        Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
-        formatUsd(lockedTwinValue),
-        formatUsd(lpValue)
-      )
+      if (lpAmount.gt(0)) {
+        renderLpPrice(
+          token,
+          'DOP',
+          Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
+          Number(ethers.utils.formatEther(dopAmount)).toFixed(2),
+          Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
+          Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
+          formatUsd(unlockedTwinValue),
+          Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
+          formatUsd(lockedTwinValue),
+          formatUsd(lpValue)
+        )
+      }
 
       return [lpValue, pendingTwin]
     }),
@@ -221,15 +225,15 @@
     $('#lp_price tbody').prepend(
       `<tr><td>${token0Symbol}-${token1Symbol} LP</td><td class="text-end">${lpAmount} LP</td><td class="text-center">${token0Amount} <img alt="${token0Symbol}" src="${getLogoByTokenSymbol(
         token0Symbol
-      )}"> + ${token1Amount} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(
+      )}"><br>${token1Amount} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(
         token1Symbol
-      )}"></td><td class="text-end">${unlockedTwin} (${unlockedTwinValue})</td><td class="text-start">&#128274;${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
+      )}"></td><td class="text-center">💰${unlockedTwin} (${unlockedTwinValue})<br>🔒${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
     )
   }
 
   function renderLpTotalValue(unlockedTwin, unlockedTwinValue, lockedTwin, lockedTwinValue, lpValue) {
     $('#lp_price tbody').append(
-      `<tr class="table-secondary fw-bold"><td colspan="3" class="text-start">Total Value</td><td class="text-end">${unlockedTwin} (${unlockedTwinValue})</td><td class="text-start">&#128274;${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
+      `<tr class="table-secondary fw-bold"><td colspan="3" class="text-start">Total Value</td><td class="text-center">💰${unlockedTwin} (${unlockedTwinValue})<br>🔒${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
     )
   }
 
