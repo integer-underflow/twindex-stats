@@ -313,6 +313,19 @@
     return price
   }
 
+  async function getCurrentBlockNumber() {
+    const blockNumber = await provider.getBlockNumber()
+
+    return blockNumber
+  }
+
+  function secondsUntilBlock(currentBlockNumber, targetBlockNumber) {
+    const BLOCK_TIME = 3 * 1000 // 3 second
+    const diff = Math.abs(currentBlockNumber - targetBlockNumber)
+
+    return diff * BLOCK_TIME
+  }
+
   function objectFlip(obj) {
     const ret = {}
     Object.keys(obj).forEach((key) => {
@@ -329,6 +342,21 @@
     const newParams = urlParams.toString()
 
     window.location.href = '//' + location.host + location.pathname + '?' + newParams
+  })
+
+  getCurrentBlockNumber().then(currentBlockNumber => {
+    const TWIN_UNLOCK_BLOCK_NUMBER = 8763010
+
+    $('#countdown-unlock-twin').countdown(new Date(new Date().valueOf() + 2383851000), function (event) {
+      $(this).html(
+        event.strftime(
+          '<span class="display-3 font-weight-bold">%D</span> Day%!d' +
+            '<span class="display-3 font-weight-bold">%H</span> Hr' +
+            '<span class="display-3 font-weight-bold">%M</span> Min' +
+            '<span class="display-3 font-weight-bold">%S</span> Sec'
+        )
+      )
+    })
   })
 
   return

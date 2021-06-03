@@ -23,6 +23,52 @@
   <div class="container py-3">
     <div class="row py-3">
       <div class="col-lg-12">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+          <div class="col">
+            <div class="card price-card h-100">
+              <div class="row g-0 h-100">
+                <div class="col-md-4 d-flex align-content-center justify-content-center card-price-logo-container">
+                  <img alt="TWIN logo" src="https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tokens/0x3806aae953a3a873D02595f76C7698a57d4C7A57.svg">
+                </div>
+                <div class="col-md-8 d-flex text-white twin-bg-gradient">
+                  <div class="card-body d-flex justify-content-center flex-wrap">
+                    <p class="card-text align-self-center display-6" id="twin_price"></p>
+                    <p class="card-text text-center locked-twin"><small class="fw-light">Locked TWIN: <span id="locked_twin"></span></small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card price-card h-100">
+              <div class="row g-0 h-100">
+                <div class="col-md-4 d-flex justify-content-center align-content-center card-price-logo-container">
+                  <img alt="DOP logo" src="./assets/dopple.svg">
+                </div>
+                <div class="col-md-8 d-flex text-white dop-bg-gradient">
+                  <div class="card-body d-flex justify-content-center flex-wrap">
+                    <p class="card-text align-self-center display-6" id="dop_price"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card h-100">
+              <div class="row g-0 h-100">
+                <div class="col-md-12 d-flex text-white twin-bg-gradient">
+                  <div class="card-body d-flex justify-content-center flex-wrap">
+                    <p class="card-text text-center locked-twin"><h4>Estimated Time Until Starting Unlock TWIN</h4><div id="countdown-unlock-twin" class="countdown py-2"></div></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row py-3">
+      <div class="col-lg-12">
         <h2>LP Holdings</h2>
         <table id="lp_price" class="table">
           <thead>
@@ -68,39 +114,6 @@
           </tbody>
         </table>
       </div>
-      <div class="col-lg-6 py-3">
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-          <div class="col">
-            <div class="card h-100">
-              <div class="row g-0 h-100">
-                <div class="col-md-4 d-flex align-content-center justify-content-center card-price-logo-container">
-                  <img alt="TWIN logo" src="https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tokens/0x3806aae953a3a873D02595f76C7698a57d4C7A57.svg">
-                </div>
-                <div class="col-md-8 d-flex text-white twin-bg-gradient">
-                  <div class="card-body d-flex justify-content-center flex-wrap">
-                    <p class="card-text align-self-center display-6" id="twin_price"></p>
-                    <p class="card-text text-center locked-twin"><small class="fw-light">Locked TWIN: <span id="locked_twin"></span></small></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card h-100">
-              <div class="row g-0 h-100">
-                <div class="col-md-4 d-flex justify-content-center align-content-center card-price-logo-container">
-                  <img alt="DOP logo" src="./assets/dopple.svg">
-                </div>
-                <div class="col-md-8 d-flex text-white dop-bg-gradient">
-                  <div class="card-body d-flex justify-content-center flex-wrap">
-                    <p class="card-text align-self-center display-6" id="dop_price"></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -115,6 +128,7 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.3.0/dist/ethers.umd.min.js" integrity="sha256-MpMcxHvgImX4Nypwk+p1BkJKZnbMSzXzIMaT0wJu4Y4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js" integrity="sha512-lteuRD+aUENrZPTXWFRPTBcDDxIGWe5uu0apPEn+3ZKYDwDaEErIK9rvR0QzUGmUQ55KFE2RqGTVoZsKctGMVw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="src/IPancakeRouter02.js"></script>
   <script src="src/IUniswapV2Pair.js"></script>
   <script src="src/FairLaunch.js"></script>
