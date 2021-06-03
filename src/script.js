@@ -56,6 +56,7 @@
 
   $('#wallet_address').val(getAddressInQueryString())
 
+  // Stock Price
   Promise.all(
     Object.entries(TOKENS).map(async ([token, address]) => {
       if (token === 'DOLLY' || token === 'DOP' || token === 'TWIN') return
@@ -65,12 +66,7 @@
       const oracleStockPrice = await getOracleStockPrice(address, dollyPrice)
       const diff = getDiff(stockPrice, oracleStockPrice)
 
-      renderStockDiff(
-        token,
-        Number(ethers.utils.formatEther(stockPrice)).toFixed(2),
-        Number(ethers.utils.formatEther(oracleStockPrice)).toFixed(2),
-        Number(ethers.utils.formatEther(diff)).toFixed(2) + '%'
-      )
+      renderStockDiff(token, formatUsd(stockPrice), formatUsd(oracleStockPrice), Number(ethers.utils.formatEther(diff)).toFixed(2) + '%')
     })
   ).then(() => {
     $('#stock_price .loading').hide()
@@ -94,7 +90,7 @@
         Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
         Number(ethers.utils.formatEther(dollyAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
-        Number(ethers.utils.formatEther(lpValue)).toFixed(2)
+        formatUsd(lpValue)
       )
 
       return lpValue
@@ -131,7 +127,7 @@
         Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
         Number(ethers.utils.formatEther(dopAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
-        Number(ethers.utils.formatEther(lpValue)).toFixed(2)
+        formatUsd(lpValue)
       )
 
       return lpValue
@@ -139,27 +135,31 @@
   ]).then((lpValues) => {
     const totalValue = lpValues.reduce((sum, value) => sum.add(value))
 
-    renderLpTotalValue(Number(ethers.utils.formatEther(totalValue)).toFixed(2))
+    renderLpTotalValue(formatUsd(totalValue))
 
     $('#lp_price .loading').hide()
   })
 
-  getOracleDollyPrice().then(async dollyPrice => {
+  getOracleDollyPrice().then(async (dollyPrice) => {
     const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
     const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
 
-    $('#twin_price').text(`$${Number(ethers.utils.formatEther(twinPrice)).toFixed(2)}`)
-    $('#dop_price').text(`$${Number(ethers.utils.formatEther(dopPrice)).toFixed(2)}`)
+    $('#twin_price').text(`${formatUsd(twinPrice)}`)
+    $('#dop_price').text(`${formatUsd(dopPrice)}`)
   })
 
-  getLockedTWINAmount(getAddressInQueryString()).then(async lockedAmount => {
+  getLockedTWINAmount(getAddressInQueryString()).then(async (lockedAmount) => {
     const amount = Number(ethers.utils.formatEther(lockedAmount)).toFixed(2)
     const dollyPrice = await getOracleDollyPrice()
     const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
     const valueInUsd = lockedAmount.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
-    $('#locked_twin').text(`${amount} ($${Number(ethers.utils.formatEther(valueInUsd)).toFixed(2)})`)
+    $('#locked_twin').text(`${amount} (${formatUsd(valueInUsd)})`)
   })
+
+  function formatUsd(bigNumber) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(ethers.utils.formatEther(bigNumber)))
+  }
 
   function getAddressInQueryString() {
     const urlParams = new URLSearchParams(window.location.search)
@@ -172,18 +172,20 @@
 
   function renderLpPrice(token0Symbol, token1Symbol, token0Amount, token1Amount, lpAmount, value) {
     $('#lp_price tbody').prepend(
-      `<tr><td>${token0Symbol}-${token1Symbol} LP</td><td class="text-end">${lpAmount} LP</td><td class="text-center">${token0Amount} ${token0Symbol} + ${token1Amount} ${token1Symbol}</td><td class="text-end">$${value}</td></tr>`
+      `<tr><td>${token0Symbol}-${token1Symbol} LP</td><td class="text-end">${lpAmount} LP</td><td class="text-center">${token0Amount} ${token0Symbol} + ${token1Amount} ${token1Symbol}</td><td class="text-end">${value}</td></tr>`
     )
   }
 
   function renderLpTotalValue(value) {
     $('#lp_price tbody').append(
-      `<tr class="table-secondary"><td colspan="3" class="text-end">Total Value</td><td class="text-end">$${value}</td></tr>`
+      `<tr class="table-secondary"><td colspan="3" class="text-end">Total Value</td><td class="text-end">${value}</td></tr>`
     )
   }
 
   function renderStockDiff(token, stockPrice, oraclePrice, diff) {
-    $('#stock_price tbody').prepend(`<tr><td>${token}</td><td>${stockPrice}</td><td>${oraclePrice}</td><td>${diff}</td></tr>`)
+    $('#stock_price tbody').prepend(
+      `<tr><td>${token}</td><td class="text-end">${stockPrice}</td><td class="text-end">${oraclePrice}</td><td class="text-end">${diff}</td></tr>`
+    )
   }
 
   function getDiff(price, oraclePrice) {
