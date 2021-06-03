@@ -144,13 +144,21 @@
     $('#lp_price .loading').hide()
   })
 
-  getLockedTWINAmount(getAddressInQueryString()).then(async (lockedAmount) => {
+  getOracleDollyPrice().then(async dollyPrice => {
+    const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+    const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
+
+    $('#twin_price').text(`$${Number(ethers.utils.formatEther(twinPrice)).toFixed(2)}`)
+    $('#dop_price').text(`$${Number(ethers.utils.formatEther(dopPrice)).toFixed(2)}`)
+  })
+
+  getLockedTWINAmount(getAddressInQueryString()).then(async lockedAmount => {
     const amount = Number(ethers.utils.formatEther(lockedAmount)).toFixed(2)
     const dollyPrice = await getOracleDollyPrice()
     const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
     const valueInUsd = lockedAmount.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
-    $('#locked_twin').text(`${amount} (${Number(ethers.utils.formatEther(valueInUsd)).toFixed(2)} USD)`)
+    $('#locked_twin').text(`${amount} ($${Number(ethers.utils.formatEther(valueInUsd)).toFixed(2)})`)
   })
 
   function getAddressInQueryString() {

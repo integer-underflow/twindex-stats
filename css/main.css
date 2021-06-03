@@ -16,8 +16,26 @@ body {
   background-color: #f5f5f5;
 }
 
-.locked-twin {
-  font-size: 14px;
+p.locked-twin {
+  flex-basis: 100%;
+}
+
+.card-price-logo-container {
+  min-height: 100px;
+}
+
+.twin-bg-gradient {
+  background: rgb(37, 223, 150);
+  background: linear-gradient(90deg, rgba(37, 223, 150, 1) 0%, rgba(0, 88, 202, 1) 100%);
+}
+
+.dop-bg-gradient {
+  background: rgb(56, 189, 248);
+  background: linear-gradient(90deg, rgba(56, 189, 248, 1) 0%, rgba(134, 239, 172, 1) 100%);
+}
+
+.card-price-logo-container img {
+  max-width: 60px;
 }
 
 @media (max-width: 991.98px) {
