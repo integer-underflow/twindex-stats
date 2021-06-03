@@ -84,16 +84,27 @@
       const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
       const [stockAmount, dollyAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDollyReserve)
 
+      const pendingTwin = await getPendingTwin(getPoolIdFromPairAddress(pairAddress), getAddressInQueryString())
+      const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+      const unlockedTwin = pendingTwin.mul(20).div(100)
+      const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+      const lockedTwin = pendingTwin.mul(80).div(100)
+      const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+
       renderLpPrice(
         token,
         'DOLLY',
         Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
         Number(ethers.utils.formatEther(dollyAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
+        Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
+        formatUsd(unlockedTwinValue),
+        Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
+        formatUsd(lockedTwinValue),
         formatUsd(lpValue)
       )
 
-      return lpValue
+      return [lpValue, pendingTwin]
     }),
     // TWIN, Stock - DOP LP
     ...Object.entries(DOP_PAIRS).map(async ([token, pairAddress]) => {
@@ -121,21 +132,46 @@
       const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
       const [stockAmount, dopAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDopReserve)
 
+      const pendingTwin = await getPendingTwin(getPoolIdFromPairAddress(pairAddress), getAddressInQueryString())
+      const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+      const unlockedTwin = pendingTwin.mul(20).div(100)
+      const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+      const lockedTwin = pendingTwin.mul(80).div(100)
+      const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+
       renderLpPrice(
         token,
         'DOP',
         Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
         Number(ethers.utils.formatEther(dopAmount)).toFixed(2),
         Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
+        Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
+        formatUsd(unlockedTwinValue),
+        Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
+        formatUsd(lockedTwinValue),
         formatUsd(lpValue)
       )
 
-      return lpValue
+      return [lpValue, pendingTwin]
     }),
-  ]).then((lpValues) => {
-    const totalValue = lpValues.reduce((sum, value) => sum.add(value))
+  ]).then(async (results) => {
+    const totalValue = results.map((r) => r[0]).reduce((sum, value) => sum.add(value))
+    const totalPendingTwins = results.map((r) => r[1]).reduce((sum, value) => sum.add(value))
 
-    renderLpTotalValue(formatUsd(totalValue))
+    const dollyPrice = await getOracleDollyPrice()
+    const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+    const unlockedTwin = totalPendingTwins.mul(20).div(100)
+    const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+    const lockedTwin = totalPendingTwins.mul(80).div(100)
+    const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+
+    renderLpTotalValue(
+      Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
+      formatUsd(unlockedTwinValue),
+      Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
+      formatUsd(lockedTwinValue),
+      formatUsd(totalValue)
+    )
 
     $('#lp_price .loading').hide()
   })
@@ -170,15 +206,30 @@
     return [lpAmount.mul(totalReserve0).div(totalLpSupply), lpAmount.mul(totalReserve1).div(totalLpSupply)]
   }
 
-  function renderLpPrice(token0Symbol, token1Symbol, token0Amount, token1Amount, lpAmount, value) {
+  function renderLpPrice(
+    token0Symbol,
+    token1Symbol,
+    token0Amount,
+    token1Amount,
+    lpAmount,
+    unlockedTwin,
+    unlockedTwinValue,
+    lockedTwin,
+    lockedTwinValue,
+    lpValue
+  ) {
     $('#lp_price tbody').prepend(
-      `<tr><td>${token0Symbol}-${token1Symbol} LP</td><td class="text-end">${lpAmount} LP</td><td class="text-center">${token0Amount} ${token0Symbol} + ${token1Amount} ${token1Symbol}</td><td class="text-end">${value}</td></tr>`
+      `<tr><td>${token0Symbol}-${token1Symbol} LP</td><td class="text-end">${lpAmount} LP</td><td class="text-center">${token0Amount} <img alt="${token0Symbol}" src="${getLogoByTokenSymbol(
+        token0Symbol
+      )}"> + ${token1Amount} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(
+        token1Symbol
+      )}"></td><td class="text-end">${unlockedTwin} (${unlockedTwinValue})</td><td class="text-start">&#128274;${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
     )
   }
 
-  function renderLpTotalValue(value) {
+  function renderLpTotalValue(unlockedTwin, unlockedTwinValue, lockedTwin, lockedTwinValue, lpValue) {
     $('#lp_price tbody').append(
-      `<tr class="table-secondary"><td colspan="3" class="text-end">Total Value</td><td class="text-end">${value}</td></tr>`
+      `<tr class="table-secondary fw-bold"><td colspan="3" class="text-start">Total Value</td><td class="text-end">${unlockedTwin} (${unlockedTwinValue})</td><td class="text-start">&#128274;${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
     )
   }
 
@@ -246,6 +297,15 @@
     const totalValue = totalToken0Value.add(totalToken1Value)
 
     return totalValue.mul(ethers.utils.parseEther('1')).div(lpSupply)
+  }
+
+  async function getPendingTwin(poolId, walletAddress) {
+    if (!walletAddress) return ethers.utils.parseEther('0')
+
+    const fairlaunch = new ethers.Contract(FAIRLAUNCH.address, FAIRLAUNCH.abi, provider)
+    const pendingTwin = await fairlaunch.pendingTwin(poolId, walletAddress)
+
+    return pendingTwin
   }
 
   async function getLpAmount(pairAddress, walletAddress) {
@@ -319,6 +379,21 @@
     return blockNumber
   }
 
+  function getLogoByTokenSymbol(token) {
+    const LOGO = {
+      AAPL: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/aapl-stock.svg',
+      AMZN: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/amza-stock.svg',
+      GOOGL: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/googl-stock.svg',
+      MSFT: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/msft-stock.svg',
+      TSLA: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tsla-stock.svg',
+      DOLLY: './assets/dolly.svg',
+      DOP: './assets/dopple.svg',
+      TWIN: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tokens/0x3806aae953a3a873D02595f76C7698a57d4C7A57.svg',
+    }
+
+    return LOGO[token]
+  }
+
   function secondsUntilBlock(currentBlockNumber, targetBlockNumber) {
     const BLOCK_TIME = 3 * 1000 // 3 second
     const diff = Math.abs(currentBlockNumber - targetBlockNumber)
@@ -344,19 +419,22 @@
     window.location.href = '//' + location.host + location.pathname + '?' + newParams
   })
 
-  getCurrentBlockNumber().then(currentBlockNumber => {
+  getCurrentBlockNumber().then((currentBlockNumber) => {
     const TWIN_UNLOCK_BLOCK_NUMBER = 8763010
 
-    $('#countdown-unlock-twin').countdown(new Date(new Date().valueOf() + secondsUntilBlock(currentBlockNumber, TWIN_UNLOCK_BLOCK_NUMBER)), function (event) {
-      $(this).html(
-        event.strftime(
-          '<span class="display-3 font-weight-bold">%D</span> Day%!d' +
-            '<span class="display-3 font-weight-bold">%H</span> Hr' +
-            '<span class="display-3 font-weight-bold">%M</span> Min' +
-            '<span class="display-3 font-weight-bold">%S</span> Sec'
+    $('#countdown-unlock-twin').countdown(
+      new Date(new Date().valueOf() + secondsUntilBlock(currentBlockNumber, TWIN_UNLOCK_BLOCK_NUMBER)),
+      function (event) {
+        $(this).html(
+          event.strftime(
+            '<span class="display-3 font-weight-bold">%D</span> Day%!d' +
+              '<span class="display-3 font-weight-bold">%H</span> Hr' +
+              '<span class="display-3 font-weight-bold">%M</span> Min' +
+              '<span class="display-3 font-weight-bold">%S</span> Sec'
+          )
         )
-      )
-    })
+      }
+    )
   })
 
   return
