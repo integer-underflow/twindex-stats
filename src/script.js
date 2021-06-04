@@ -54,6 +54,16 @@
     abi: FAIRLAUNCH_ABI,
   }
 
+  const PRICE_FEEDS = {
+    address: '0xd4f061a6a276f8B0Ae83D210D838B45fCC7532B2',
+    abi: ['function queryRate(address, address) external view returns (uint256 rate, uint256 precision)'],
+  }
+
+  const DFI_PROTOCOLS = {
+    address: '0x37f5a7D8bBB1cc0307985D00DE520fE30630790c',
+    abi: DFI_PROTOCOLS_ABI,
+  }
+
   $('#wallet_address').val(getAddressInQueryString())
 
   // Stock Price
@@ -177,8 +187,49 @@
       formatUsd(totalValue)
     )
 
-    $('#lp_price .loading').hide()
+    $('#lp_holdings .loading').hide()
   })
+
+  getUserLoans().then((loans) => {
+    loans.forEach((loan) => {
+      const COLLATERAL_THRESHOLD = ethers.utils.parseEther('0.01')
+      const { loanToken, collateralToken, principal, collateral, maintenanceMargin, currentMargin } = loan
+
+      if (collateral.lt(COLLATERAL_THRESHOLD)) return
+
+      const loanTokenSymbol = objectFlip(TOKENS)[loanToken]
+      const collateralTokenSymbol = objectFlip(TOKENS)[collateralToken]
+
+      let margin = currentMargin.sub(maintenanceMargin)
+      if (margin.lt(0)) {
+        margin = ethers.utils.parseEther('0')
+      }
+
+      renderMintPosition(
+        loanTokenSymbol,
+        Number(ethers.utils.formatEther(principal)).toFixed(5),
+        collateralTokenSymbol,
+        Number(ethers.utils.formatEther(collateral)).toFixed(2),
+        Number(ethers.utils.formatEther(maintenanceMargin)).toFixed(2),
+        Number(ethers.utils.formatEther(margin)).toFixed(2)
+      )
+    })
+
+    $('#mint_positions .loading').hide()
+  })
+
+  function renderMintPosition(loanTokenSymbol, loanTokenAmount, collateralTokenSymbol, collateralTokenAmount, maintenanceMargin, margin) {
+    $('#mint_positions tbody').prepend(
+      `<tr><td>${loanTokenAmount} <img alt="${loanTokenSymbol}" src="${getLogoByTokenSymbol(
+        loanTokenSymbol
+      )}"></td><td>${collateralTokenAmount} <img alt="${collateralTokenSymbol}" src="${getLogoByTokenSymbol(
+        collateralTokenSymbol
+      )}"></td><td class="text-center"><div class="mint-position-progress progress m-1"><div class="progress-bar bg-transparent" role="progressbar" style="width: ${maintenanceMargin}%">💀</div>
+      <div class="progress-bar bg-transparent" role="progressbar" style="width: ${margin}%;" aria-valuenow="${margin}" aria-valuemin="0" aria-valuemax="100">${margin}%</div>
+      <div class="progress-bar progress-bar-mask" role="progressbar" style="width: ${100 - maintenanceMargin - margin}%"></div>
+  </div></td></tr>`
+    )
+  }
 
   getOracleDollyPrice().then(async (dollyPrice) => {
     const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
@@ -222,7 +273,7 @@
     lockedTwinValue,
     lpValue
   ) {
-    $('#lp_price tbody').prepend(
+    $('#lp_holdings tbody').prepend(
       `<tr><td>${token0Symbol}-${token1Symbol} LP</td><td class="text-end">${lpAmount} LP</td><td class="text-center">${token0Amount} <img alt="${token0Symbol}" src="${getLogoByTokenSymbol(
         token0Symbol
       )}"><br>${token1Amount} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(
@@ -232,7 +283,7 @@
   }
 
   function renderLpTotalValue(unlockedTwin, unlockedTwinValue, lockedTwin, lockedTwinValue, lpValue) {
-    $('#lp_price tbody').append(
+    $('#lp_holdings tbody').append(
       `<tr class="table-secondary fw-bold"><td colspan="3" class="text-start">Total Value</td><td class="text-center">💰${unlockedTwin} (${unlockedTwinValue})<br>🔒${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
     )
   }
@@ -352,11 +403,7 @@
    * @param {BigNumber} dollyPrice dolly price (18 decimal precision) (get from getOracleDollyPrice)
    */
   async function getOracleStockPrice(stockAddress, dollyPrice) {
-    const priceFeeds = new ethers.Contract(
-      '0xd4f061a6a276f8B0Ae83D210D838B45fCC7532B2',
-      ['function queryRate(address, address) external view returns (uint256 rate, uint256 precision)'],
-      provider
-    )
+    const priceFeeds = new ethers.Contract(PRICE_FEEDS.address, PRICE_FEEDS.abi, provider)
 
     const [stockPriceInDolly, precision] = await priceFeeds.functions.queryRate(stockAddress, TOKENS.DOLLY)
 
@@ -381,6 +428,13 @@
     const blockNumber = await provider.getBlockNumber()
 
     return blockNumber
+  }
+
+  async function getUserLoans() {
+    const dfiProtocol = new ethers.Contract(DFI_PROTOCOLS.address, DFI_PROTOCOLS.abi, provider)
+    const loans = (await dfiProtocol.functions.getUserLoans(getAddressInQueryString(), 0, 1000, 0, false, false))[0]
+
+    return loans
   }
 
   function getLogoByTokenSymbol(token) {
