@@ -274,17 +274,31 @@
     lpValue
   ) {
     $('#lp_holdings tbody').prepend(
-      `<tr><td>${token0Symbol}-${token1Symbol} LP</td><td class="text-end">${lpAmount} LP</td><td class="text-center">${token0Amount} <img alt="${token0Symbol}" src="${getLogoByTokenSymbol(
+      `<tr>
+      <td>${token0Symbol}-${token1Symbol} LP</td>
+      <td class="text-end">${lpAmount} LP</td>
+      <td class="text-center">
+        ${new Intl.NumberFormat().format(token0Amount)} <img alt="${token0Symbol}" src="${getLogoByTokenSymbol(
         token0Symbol
-      )}"><br>${token1Amount} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(
+      )}"><br>${new Intl.NumberFormat().format(token1Amount)} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(
         token1Symbol
-      )}"></td><td class="text-center">💰${unlockedTwin} (${unlockedTwinValue})<br>🔒${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
+      )}"></td>
+      <td class="text-center">
+        <i class="bi bi-unlock"></i> ${unlockedTwin} <span class="text-sm">(${unlockedTwinValue})</span><br>
+        <i class="bi bi-lock-fill"></i> ${lockedTwin} <span class="text-sm">(${lockedTwinValue})</span>
+      </td>
+      <td class="text-end">${lpValue}</td></tr>`
     )
   }
 
   function renderLpTotalValue(unlockedTwin, unlockedTwinValue, lockedTwin, lockedTwinValue, lpValue) {
     $('#lp_holdings tbody').append(
-      `<tr class="table-secondary fw-bold"><td colspan="3" class="text-start">Total Value</td><td class="text-center">💰${unlockedTwin} (${unlockedTwinValue})<br>🔒${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
+      `<tr class="table-secondary fw-bold">
+      <td colspan="3" class="text-start">Total Value</td>
+      <td class="text-center">
+        <i class="bi bi-unlock"></i> ${unlockedTwin} <span class="text-sm">(${unlockedTwinValue})</span><br>
+        <i class="bi bi-lock-fill"></i> ${lockedTwin} <span class="text-sm">(${lockedTwinValue})</td>
+      <td class="text-end">${lpValue}</td></tr>`
     )
   }
 

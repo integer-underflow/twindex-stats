@@ -140,3 +140,7 @@ p.locked-twin {
   color: #212529;
   border-color: #212529;
 }
+
+.text-sm {
+  font-size: 12px;
+}
