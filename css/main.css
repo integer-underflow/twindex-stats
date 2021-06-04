@@ -11,7 +11,6 @@ body {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 60px;
   line-height: 60px;
   background-color: #f5f5f5;
 }
@@ -51,10 +50,6 @@ p.locked-twin {
   body {
     padding-bottom: 120px;
   }
-
-  .footer {
-    height: 120px;
-  }
 }
 
 #lp_holdings img,
@@ -76,6 +71,8 @@ p.locked-twin {
 
 #buy_me_coffee {
   font-size: 10px;
+  line-height: 1rem;
+  white-space: normal;
 }
 
 .countdown {
@@ -96,7 +93,7 @@ p.locked-twin {
 .footer-content {
   vertical-align: middle;
   display: inline-block;
-  overflow-x: scroll;
+  overflow-x: hidden;
   white-space: nowrap;
   max-width: 100%;
 }
