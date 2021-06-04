@@ -431,12 +431,11 @@
   }
 
   async function getUserLoans() {
+    let loans = []
     try {
       const dfiProtocol = new ethers.Contract(DFI_PROTOCOLS.address, DFI_PROTOCOLS.abi, provider)
-      const loans = (await dfiProtocol.functions.getUserLoans(getAddressInQueryString(), 0, 1000, 0, false, false))[0]
-    } catch (_) {
-      return []
-    }
+      loans = (await dfiProtocol.functions.getUserLoans(getAddressInQueryString(), 0, 1000, 0, false, false))[0]
+    } catch (_) {}
 
     return loans
   }
