@@ -480,6 +480,16 @@
     window.location.href = '//' + location.host + location.pathname + '?' + newParams
   })
 
+  $('#darkmode-button').on('click', (e) => {
+    darkmode.toggleDarkMode()
+
+    if ($(e.currentTarget).find('i.bi').hasClass('bi-moon')) {
+      $(e.currentTarget).find('i.bi').removeClass('bi-moon').addClass('bi-sun')
+    } else {
+      $(e.currentTarget).find('i.bi').removeClass('bi-sun').addClass('bi-moon')
+    }
+  })
+
   getCurrentBlockNumber().then((currentBlockNumber) => {
     const TWIN_UNLOCK_BLOCK_NUMBER = 8763010
 

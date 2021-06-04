@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-color-scheme>
 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <meta name="color-scheme" content="light dark">
+  <link href="assets/css/bootstrap-blackbox.min.css" rel="stylesheet">
+  <link href="assets/css/bootstrap-icons.css" rel="stylesheet">
   <link href="css/main.css" rel="stylesheet">
   <title>TWINDEX stats</title>
 </head>
@@ -16,7 +18,10 @@
       <a class="navbar-brand display-1" href="#">TWINDEX stats</a>
       <form id="wallet_address_form" class="d-flex">
         <input type="search" class="form-control me-2" id="wallet_address" placeholder="Wallet Address">
-        <button type="submit" class="btn btn-outline-success">Search</button>
+        <button type="submit" class="btn btn-outline-light me-2">Search</button>
+        <a id="darkmode-button" class="btn btn-outline-light">
+          <i class="bi bi-moon"></i>
+        </a>
       </form>
     </div>
   </nav>
@@ -148,7 +153,7 @@
     </div>
   </div>
 
-  <footer class="footer">
+  <footer class="footer bg-light">
     <div class="container">
       <div class="row">
         <div class="col-lg-6"><section class="text-muted footer-content">Made with &#10084; by a lazy man.</span></section></div>
@@ -157,9 +162,11 @@
     </div>
   </footer>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.3.0/dist/ethers.umd.min.js" integrity="sha256-MpMcxHvgImX4Nypwk+p1BkJKZnbMSzXzIMaT0wJu4Y4=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js" integrity="sha512-lteuRD+aUENrZPTXWFRPTBcDDxIGWe5uu0apPEn+3ZKYDwDaEErIK9rvR0QzUGmUQ55KFE2RqGTVoZsKctGMVw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="assets/js/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="assets/js/ethers.umd.min.js" integrity="sha256-MpMcxHvgImX4Nypwk+p1BkJKZnbMSzXzIMaT0wJu4Y4=" crossorigin="anonymous"></script>
+  <script src="assets/js/jquery.countdown.min.js" integrity="sha512-lteuRD+aUENrZPTXWFRPTBcDDxIGWe5uu0apPEn+3ZKYDwDaEErIK9rvR0QzUGmUQ55KFE2RqGTVoZsKctGMVw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="assets/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  <script src="assets/js/darkmode.min.js"></script>
   <script src="src/IPancakeRouter02.js"></script>
   <script src="src/IUniswapV2Pair.js"></script>
   <script src="src/FairLaunch.js"></script>
