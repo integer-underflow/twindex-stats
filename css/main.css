@@ -144,3 +144,6 @@ p.locked-twin {
 .text-sm {
   font-size: 12px;
 }
+[data-bs-color-scheme=dark] .card {
+  background-color: #2a2a2a;
+}
