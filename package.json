@@ -6,5 +6,8 @@
   "license": "MIT",
   "devDependencies": {
     "prettier": "^2.3.0"
+  },
+  "dependencies": {
+    "ethers": "^5.3.0"
   }
 }
