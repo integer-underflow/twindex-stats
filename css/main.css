@@ -77,7 +77,7 @@ p.locked-twin {
 
 .countdown {
   text-transform: uppercase;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 .countdown span {
