@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="90" height="55" viewBox="0 0 90 55">
+    <defs>
+        <linearGradient id="taj4tv026a" x1=".5" x2=".5" y1="1.193" y2="-.001" gradientUnits="objectBoundingBox">
+            <stop offset=".001" stop-color="#00c7e0"/>
+            <stop offset="1" stop-color="#00ff8d"/>
+        </linearGradient>
+        <linearGradient id="9f2168optb" x1=".5" x2=".5" y1=".031" y2="1.008" gradientUnits="objectBoundingBox">
+            <stop offset=".001" stop-color="#0062dc"/>
+            <stop offset="1" stop-color="#00ff8d"/>
+        </linearGradient>
+        <linearGradient id="z12i843y9c" x1=".5" x2=".5" y1="1.046" y2=".068" gradientUnits="objectBoundingBox">
+            <stop offset=".001" stop-color="#00c7e0"/>
+            <stop offset="1" stop-color="#0062dc"/>
+        </linearGradient>
+        <linearGradient id="owugcqa89d" x1=".5" x2=".5" y1="-.037" y2=".897" xlink:href="#taj4tv026a"/>
+        <linearGradient id="dd7at0fwne" x1=".5" x2=".5" y1=".939" y2=".06" xlink:href="#9f2168optb"/>
+        <linearGradient id="s374xgv13f" x1=".5" x2=".5" y1=".051" y2="1.04" xlink:href="#z12i843y9c"/>
+    </defs>
+    <g>
+        <path fill="none" d="M0 0H90V55H0z" transform="translate(.599 -4.569) translate(-.599 4.569)"/>
+        <g transform="translate(.599 -4.569) translate(-114.181 -228.003)">
+            <circle cx="26.24" cy="26.24" r="26.24" fill="#e6f7fe" transform="translate(149.398 234.287)"/>
+            <g>
+                <path fill="url(#taj4tv026a)" d="M236.8 285.862a3.3 3.3 0 0 1-3.3-3.3v-11.74 12.841a9.353 9.353 0 0 1-3.585 7.369 9.33 9.33 0 0 0 5.788 2h3.87v-7.173z" transform="translate(158.875 249.42) translate(-206.035 -270.822)"/>
+                <path fill="url(#9f2168optb)" d="M212.661 283.663v-12.841 11.738a3.3 3.3 0 0 1-3.3 3.3h-2.766v7.173h3.87a9.329 9.329 0 0 0 5.787-2 9.354 9.354 0 0 1-3.591-7.37z" transform="translate(158.875 249.42) translate(-192.377 -270.822)"/>
+                <path fill="url(#z12i843y9c)" d="M228.419 283.663v-12.841h-7.171v12.841a9.354 9.354 0 0 0 3.585 7.369 9.353 9.353 0 0 0 3.586-7.369z" transform="translate(158.875 249.42) translate(-200.964 -270.822)"/>
+                <path fill="url(#owugcqa89d)" d="M175.043 278a3.3 3.3 0 0 1 3.3 3.3v11.738-12.843a9.353 9.353 0 0 1 3.585-7.37 9.33 9.33 0 0 0-5.788-2h-3.87V278z" transform="translate(158.875 249.42) translate(-172.277 -270.822)"/>
+                <path fill="url(#dd7at0fwne)" d="M199.178 280.195v12.841V281.3a3.3 3.3 0 0 1 3.3-3.3h2.766v-7.174h-3.87a9.329 9.329 0 0 0-5.787 2 9.354 9.354 0 0 1 3.591 7.369z" transform="translate(158.875 249.42) translate(-185.936 -270.822)"/>
+                <path fill="url(#s374xgv13f)" d="M186.937 283.028v12.841h7.171v-12.841a9.354 9.354 0 0 0-3.585-7.37 9.353 9.353 0 0 0-3.586 7.37z" transform="translate(158.875 249.42) translate(-180.865 -273.655)"/>
+            </g>
+        </g>
+        <g transform="translate(.599 -4.569) translate(.082 -.347)">
+            <circle cx="26" cy="26" r="26" fill="#3ab2e6" transform="translate(1.319 6.916)"/>
+            <g fill="#fff">
+                <path d="M29.485 25.88l-3.963-6.863H8.055a5.356 5.356 0 0 1-4.078-3.088 5.915 5.915 0 0 0 .789 3.088l1.124 1.946 4.273 7.4a5.413 5.413 0 0 0 4.688 2.707h10.791a5.921 5.921 0 0 0 3.328-1.026c.019-.034 1.449-2.544.515-4.164z" transform="translate(11.01 18.236) translate(-3.976 -1.043)"/>
+                <path d="M25.4 22.273l-5.249-9.091a5.913 5.913 0 0 0-1.928-2.019c-.118-.035-3.21-.925-4.294.952l-4.156 7.2L14.9 28.2l3.965 6.863c.935 1.621-.494 4.129-.514 4.165a5.917 5.917 0 0 0 1.8-1.936l.786-1.362L25.4 28.2a5.921 5.921 0 0 0 0-5.922z" opacity="0.6" transform="translate(11.01 18.236) translate(6.645 -10.221)"/>
+                <path d="M25.641 10.675h-10.5a5.921 5.921 0 0 0-5.128 2.961l-5.247 9.091a5.913 5.913 0 0 0-.789 2.836C4.24 27.738 7.3 28.651 7.3 28.651h7.966l5.128-8.883 4.155-7.2c1.084-1.877 4.176-.986 4.294-.951a5.916 5.916 0 0 0-3.202-.942z" opacity="0.8" transform="translate(11.01 18.236) translate(-3.975 -10.675)"/>
+            </g>
+        </g>
+    </g>
+</svg>

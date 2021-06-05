@@ -8,12 +8,7 @@ interface Props {
 
 const LPCard = ({ lp }: Props) => {
   const poolImage = useMemo(() => {
-    switch (`${lp.token1Symbol}-${lp.token0Symbol}`) {
-      case 'DOLLY-AMZN':
-        return '/image/pool/DOLLY-AMZN.svg'
-      case 'DOLLY-TSLA':
-        return '/image/pool/DOLLY-TSLA.svg'
-    }
+    return `/image/pool/${lp.token1Symbol}-${lp.token0Symbol}.svg`
   }, [lp.token0Symbol, lp.token1Symbol])
 
   return (
@@ -45,8 +40,7 @@ const LPCard = ({ lp }: Props) => {
             {lp.lpAmount}&nbsp;<span style={{ fontWeight: 200 }}>LP</span>
           </Col>
           <Col md={2} className="d-flex align-items-center justify-content-center flex-column">
-            
-          <span>
+            <span>
               {lp.token1Amount} <span style={{ fontWeight: 200 }}>{lp.token1Symbol}</span>
             </span>
             <span>
