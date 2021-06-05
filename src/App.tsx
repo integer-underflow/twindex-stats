@@ -22,7 +22,7 @@ const App = () => {
             <Countdown />
           </Col>
           <Col md="12" className="mt-3">
-            <h2>LP Holdings</h2>
+            <h2 className="text-primary">LP Holdings</h2>
             <LPTable />
           </Col>
           <Col md="6" className="mt-3">
