@@ -1,84 +1,64 @@
-import { Table } from 'react-bootstrap'
+import { Card, Row, Col } from 'react-bootstrap'
+import LPCard from './LPCard'
 
 const LPTable = () => {
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Pair</th>
-          <th className="text-end">LP Balance</th>
-          <th className="text-center">Underlying Assets</th>
-          <th className="text-center">Pending TWIN</th>
-          <th className="text-end">Total LP Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>AMZN-DOLLY LP</td>
-          <td className="text-end">1.94 LP</td>
-          <td className="text-center">
-            0.031 AMZN
-            <br />
-            123.25 DOLLY
-          </td>
-          <td className="text-center">
-            <i className="bi bi-unlock"></i>
-            0.18 <span className="approx-value">($1.63)</span>
-            <br />
-            <i className="bi bi-lock-fill"></i>
-            0.73 <span className="approx-value">($6.50)</span>
-          </td>
-          <td className="text-end">$245.98</td>
-        </tr>
-        <tr>
-          <td>TSLA-DOLLY LP</td>
-          <td className="text-end">4.79 LP</td>
-          <td className="text-center">
-            0.175 TSLA
-            <br />
-            132.94 DOLLY
-          </td>
-          <td className="text-center">
-            <i className="bi bi-unlock"></i>
-            0.47 <span className="approx-value">($4.15)</span>
-            <br />
-            <i className="bi bi-lock-fill"></i>
-            1.87 <span className="approx-value">($16.61)</span>
-          </td>
-          <td className="text-end">$265.46</td>
-        </tr>
-        <tr
-          className="loading"
-          style={{
-            display: 'none',
-          }}
-        >
-          <td
-            colSpan={6}
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </td>
-        </tr>
-        <tr className="table-secondary">
-          <td colSpan={3} className="text-start">
+    <Card
+      className="p-4"
+      style={{
+        background: '#192230',
+      }}
+    >
+      <Card.Body className="pt-0">
+        <h4 className="mb-4 m-0">LP Holdings</h4>
+
+        <Row className="mb-4 mx-1">
+          <Col className="text-center" style={{ fontWeight: 300 }} md={4}>
+            LP Tokens Name
+          </Col>
+          <Col className="text-center" style={{ fontWeight: 300 }} md={2}>
+            Balance
+          </Col>
+          <Col className="text-center" style={{ fontWeight: 300 }} md={2}>
+            Underlying Assets
+          </Col>
+          <Col className="text-center" style={{ fontWeight: 300 }} md={2}>
+            Pending TWIN
+          </Col>
+          <Col className="text-center" style={{ fontWeight: 300 }} md={2}>
             Total Value
-          </td>
-          <td className="text-center">
-            <i className="bi bi-unlock"></i>
-            0.65 <span className="approx-value">($5.78)</span>
-            <br />
-            <i className="bi bi-lock-fill"></i>
-            2.6 <span className="approx-value">($23.11)</span>
-          </td>
-          <td className="text-end">$511.44</td>
-        </tr>
-      </tbody>
-    </Table>
+          </Col>
+        </Row>
+
+        <LPCard
+          name="DOLLY-AMZN"
+          balance={1.94}
+          assets={{
+            AMZN: 0.031,
+            DOLLY: 123.25,
+          }}
+          reward={{
+            locked: 0.18,
+            available: 0.73,
+          }}
+          value={245.98}
+        />
+
+        <LPCard
+          name="DOLLY-TSLA"
+          balance={1.94}
+          assets={{
+            TSLA: 0.031,
+            DOLLY: 123.25,
+          }}
+          reward={{
+            locked: 0.18,
+            available: 0.73,
+          }}
+          value={245.98}
+        />
+      </Card.Body>
+    </Card>
   )
 }
 
