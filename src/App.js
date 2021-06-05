@@ -1,6 +1,12 @@
+import { Container } from "react-bootstrap";
+import Header from "./components/Header";
+
 const App = () => {
   return (
-    <h1>Index</h1>
+    <>
+      <Header />
+      <Container>Content</Container>
+    </>
   );
 };
 
