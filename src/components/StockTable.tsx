@@ -1,56 +1,49 @@
-import { Table } from 'react-bootstrap'
+import { Card, Row, Col } from 'react-bootstrap'
+import StockCard from './StockCard'
 
 const StockTable = () => {
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Stock</th>
-          <th className="text-end">Twindex Price</th>
-          <th className="text-end">Oracle Price</th>
-          <th className="text-end">Diff</th>
-        </tr>
-      </thead>
+    <Card
+      className="p-4"
+      style={{
+        background: '#192230',
+      }}
+    >
+      <Card.Body className="pt-0">
+        <h4 className="mb-4 m-0">Stock Price</h4>
 
-      <tbody>
-        <tr>
-          <td>AMZN</td>
-          <td className="text-end">$3,967.82</td>
-          <td className="text-end">$3,212.01</td>
-          <td className="text-end">23.53%</td>
-        </tr>
-        <tr>
-          <td>AAPL</td>
-          <td className="text-end">$158.89</td>
-          <td className="text-end">$125.58</td>
-          <td className="text-end">26.52%</td>
-        </tr>
-        <tr>
-          <td>GOOGL</td>
-          <td className="text-end">$2,960.15</td>
-          <td className="text-end">$2,390.93</td>
-          <td className="text-end">23.81%</td>
-        </tr>
-        <tr>
-          <td>TSLA</td>
-          <td className="text-end">$756.88</td>
-          <td className="text-end">$599.29</td>
-          <td className="text-end">26.30%</td>
-        </tr>
-        <tr className="loading" style={{ display: 'none' }}>
-          <td
-            colSpan={4}
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </Table>
+        <Row className="mb-4 mx-1">
+          <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
+            Symbol
+          </Col>
+          <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
+            Twindex
+          </Col>
+          <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
+            Oracle
+          </Col>
+          <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
+            Diff
+          </Col>
+        </Row>
+
+        <StockCard
+          symbol="AMZN"
+          price={{
+            twindex: 4000,
+            oracle: 3000,
+          }}
+        />
+
+        <StockCard
+          symbol="TSLA"
+          price={{
+            twindex: 756.88,
+            oracle: 599.29,
+          }}
+        />
+      </Card.Body>
+    </Card>
   )
 }
 

@@ -28,7 +28,6 @@ const App = () => {
             <MintTable />
           </Col>
           <Col md="6" className="mt-3">
-            <h2>Stock Price</h2>
             <StockTable />
           </Col>
         </Row>
