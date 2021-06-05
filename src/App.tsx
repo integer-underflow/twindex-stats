@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import Countdown from './components/Countdown'
+import Footer from './components/Footer'
 import Header from './components/Header'
 import LPTable from './components/LPSection'
 import MintSection from './components/MintSection'
@@ -44,6 +45,7 @@ const App = () => {
           </Col>
         </Row>
       </Container>
+      <Footer />
     </>
   )
 }

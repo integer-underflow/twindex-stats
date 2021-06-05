@@ -16,6 +16,7 @@ const LPTotalCard = ({ lp }: Props) => {
       style={{
         backgroundColor: 'transparent',
         border: '0',
+        boxShadow: 'none',
       }}
     >
       <Card.Body>
