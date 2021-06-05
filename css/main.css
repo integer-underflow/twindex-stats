@@ -32,6 +32,10 @@ p.locked-twin {
   min-height: 100px;
 }
 
+.approx-value {
+  font-size: 0.7em;
+}
+
 .twin-bg-gradient {
   background: rgb(37, 223, 150);
   background: linear-gradient(90deg, rgba(37, 223, 150, 1) 0%, rgba(0, 88, 202, 1) 100%);
@@ -77,12 +81,11 @@ p.locked-twin {
 
 .countdown {
   text-transform: uppercase;
-  font-weight: bold;
 }
 
 .countdown span {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-left: 0.8rem;
 }
 
@@ -111,36 +114,36 @@ p.locked-twin {
   background-color: #e9ecef;
 }
 
-[data-bs-color-scheme="dark"] .progress-bar-mask {
+[data-bs-color-scheme='dark'] .progress-bar-mask {
   background-color: #3b3b3b;
 }
 
-[data-bs-color-scheme="dark"] .bg-light {
+[data-bs-color-scheme='dark'] .bg-light {
   background-color: #3b3b3b !important;
 }
 
-[data-bs-color-scheme="dark"] .btn-outline-light {
+[data-bs-color-scheme='dark'] .btn-outline-light {
   color: #9e9e9e;
-  border-color: #9e9e9e;;
+  border-color: #9e9e9e;
 }
 
-[data-bs-color-scheme="dark"] .btn-outline-light:hover {
+[data-bs-color-scheme='dark'] .btn-outline-light:hover {
   color: #000;
   background-color: #9e9e9e;
   border-color: #9e9e9e;
 }
 
-[data-bs-color-scheme="light"] .btn-outline-light:hover {
+[data-bs-color-scheme='light'] .btn-outline-light:hover {
   color: #fff;
   background-color: #212529;
   border-color: #212529;
 }
 
-[data-bs-color-scheme="light"] .btn-outline-light {
+[data-bs-color-scheme='light'] .btn-outline-light {
   color: #212529;
   border-color: #212529;
 }
 
-[data-bs-color-scheme=dark] .card {
+[data-bs-color-scheme='dark'] .card {
   background-color: #2a2a2a;
 }

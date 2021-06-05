@@ -105,12 +105,12 @@
         renderLpPrice(
           token,
           'DOLLY',
-          Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
-          Number(ethers.utils.formatEther(dollyAmount)).toFixed(2),
-          Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
-          Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(stockAmount)).toFixed(4)),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(dollyAmount)).toFixed(2)),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lpAmount)).toFixed(2)),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
           formatUsd(unlockedTwinValue),
-          Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
           formatUsd(lockedTwinValue),
           formatUsd(lpValue)
         )
@@ -155,12 +155,12 @@
         renderLpPrice(
           token,
           'DOP',
-          Number(ethers.utils.formatEther(stockAmount)).toFixed(4),
-          Number(ethers.utils.formatEther(dopAmount)).toFixed(2),
-          Number(ethers.utils.formatEther(lpAmount)).toFixed(2),
-          Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(stockAmount)).toFixed(4)),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(dopAmount)).toFixed(2)),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lpAmount)).toFixed(2)),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
           formatUsd(unlockedTwinValue),
-          Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
           formatUsd(lockedTwinValue),
           formatUsd(lpValue)
         )
@@ -180,9 +180,9 @@
     const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
     renderLpTotalValue(
-      Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2),
+      new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
       formatUsd(unlockedTwinValue),
-      Number(ethers.utils.formatEther(lockedTwin)).toFixed(2),
+      new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
       formatUsd(lockedTwinValue),
       formatUsd(totalValue)
     )
@@ -218,19 +218,6 @@
     $('#mint_positions .loading').hide()
   })
 
-  function renderMintPosition(loanTokenSymbol, loanTokenAmount, collateralTokenSymbol, collateralTokenAmount, maintenanceMargin, margin) {
-    $('#mint_positions tbody').prepend(
-      `<tr><td>${loanTokenAmount} <img alt="${loanTokenSymbol}" src="${getLogoByTokenSymbol(
-        loanTokenSymbol
-      )}"></td><td>${collateralTokenAmount} <img alt="${collateralTokenSymbol}" src="${getLogoByTokenSymbol(
-        collateralTokenSymbol
-      )}"></td><td class="text-center"><div class="mint-position-progress progress m-1"><div class="progress-bar bg-transparent" role="progressbar" style="width: ${maintenanceMargin}%">💀</div>
-      <div class="progress-bar bg-transparent" role="progressbar" style="width: ${margin}%;" aria-valuenow="${margin}" aria-valuemin="0" aria-valuemax="100">${margin}%</div>
-      <div class="progress-bar progress-bar-mask" role="progressbar" style="width: ${100 - maintenanceMargin - margin}%"></div>
-  </div></td></tr>`
-    )
-  }
-
   getOracleDollyPrice().then(async (dollyPrice) => {
     const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
     const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
@@ -245,7 +232,7 @@
     const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
     const valueInUsd = lockedAmount.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
-    $('#locked_twin').text(`${amount} (${formatUsd(valueInUsd)})`)
+    $('#locked_twin').html(`${amount} <span class="approx-value">(${formatUsd(valueInUsd)})</span>`)
   })
 
   function formatUsd(bigNumber) {
@@ -278,19 +265,36 @@
         token0Symbol
       )}"><br>${token1Amount} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(
         token1Symbol
-      )}"></td><td class="text-center">💰${unlockedTwin} (${unlockedTwinValue})<br>🔒${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
+      )}"></td><td class="text-center"><i class="bi bi-unlock"></i>
+${unlockedTwin} <span class="approx-value">(${unlockedTwinValue})</span><br><i class="bi bi-lock-fill"></i>
+${lockedTwin} <span class="approx-value">(${lockedTwinValue})</span></td><td class="text-end">${lpValue}</td></tr>`
     )
   }
 
   function renderLpTotalValue(unlockedTwin, unlockedTwinValue, lockedTwin, lockedTwinValue, lpValue) {
     $('#lp_holdings tbody').append(
-      `<tr class="table-secondary fw-bold"><td colspan="3" class="text-start">Total Value</td><td class="text-center">💰${unlockedTwin} (${unlockedTwinValue})<br>🔒${lockedTwin} (${lockedTwinValue})</td><td class="text-end">${lpValue}</td></tr>`
+      `<tr class="table-secondary"><td colspan="3" class="text-start">Total Value</td><td class="text-center"><i class="bi bi-unlock"></i>
+${unlockedTwin} <span class="approx-value">(${unlockedTwinValue})</span><br><i class="bi bi-lock-fill"></i>
+${lockedTwin} <span class="approx-value">(${lockedTwinValue})</span></td><td class="text-end">${lpValue}</td></tr>`
     )
   }
 
   function renderStockDiff(token, stockPrice, oraclePrice, diff) {
     $('#stock_price tbody').prepend(
       `<tr><td>${token}</td><td class="text-end">${stockPrice}</td><td class="text-end">${oraclePrice}</td><td class="text-end">${diff}</td></tr>`
+    )
+  }
+
+  function renderMintPosition(loanTokenSymbol, loanTokenAmount, collateralTokenSymbol, collateralTokenAmount, maintenanceMargin, margin) {
+    $('#mint_positions tbody').prepend(
+      `<tr><td>${loanTokenAmount} <img alt="${loanTokenSymbol}" src="${getLogoByTokenSymbol(
+        loanTokenSymbol
+      )}"></td><td>${collateralTokenAmount} <img alt="${collateralTokenSymbol}" src="${getLogoByTokenSymbol(
+        collateralTokenSymbol
+      )}"></td><td class="text-center"><div class="mint-position-progress progress m-1"><div class="progress-bar bg-transparent" role="progressbar" style="width: ${maintenanceMargin}%">💀</div>
+      <div class="progress-bar bg-transparent" role="progressbar" style="width: ${margin}%;" aria-valuenow="${margin}" aria-valuemin="0" aria-valuemax="100">${margin}%</div>
+      <div class="progress-bar progress-bar-mask" role="progressbar" style="width: ${100 - maintenanceMargin - margin}%"></div>
+  </div></td></tr>`
     )
   }
 
@@ -498,15 +502,21 @@
       function (event) {
         $(this).html(
           event.strftime(
-            '<span class="display-3 font-weight-bold">%D</span> Day%!d' +
-              '<span class="display-3 font-weight-bold">%H</span> Hr' +
-              '<span class="display-3 font-weight-bold">%M</span> Min' +
-              '<span class="display-3 font-weight-bold">%S</span> Sec'
+            '<span class="display-6">%D</span> Day%!d' +
+              '<span class="display-6">%H</span> Hr' +
+              '<span class="display-6">%M</span> Min' +
+              '<span class="display-6">%S</span> Sec'
           )
         )
       }
     )
   })
+  ;(() => {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+  })()
 
   return
 })()
