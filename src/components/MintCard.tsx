@@ -16,13 +16,15 @@ const MintCard = ({ position }: Props) => {
     >
       <Card.Body className="py-2">
         <Row>
-          <Col className="text-center" style={{ fontWeight: 300 }} md={4}>
-            {position.loanTokenAmount} {position.loanTokenSymbol}
+          <Col className="text-center" style={{ fontWeight: 300 }} md={5}>
+            <div>
+              {position.loanTokenAmount} <small style={{ fontWeight: 200 }}>{position.loanTokenSymbol}</small>
+            </div>
+            <div>
+              {position.collateralTokenAmount} <small style={{ fontWeight: 200 }}>{position.collateralTokenSymbol}</small>
+            </div>
           </Col>
-          <Col className="text-center" style={{ fontWeight: 300 }} md={4}>
-            {position.collateralTokenAmount} {position.collateralTokenSymbol}
-          </Col>
-          <Col className="text-center d-flex align-items-center" style={{ fontWeight: 300 }} md={4}>
+          <Col className="text-center d-flex align-items-center mt-2" style={{ fontWeight: 300 }} md={7}>
             <div className="w-100">
               <ProgressBar
                 style={{
