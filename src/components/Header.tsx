@@ -1,17 +1,23 @@
-import { useMemo } from 'react'
+import { useState } from 'react'
 import { Container, Nav, Navbar, Form, Button, InputGroup } from 'react-bootstrap'
 import { getAddressInQueryString } from '../modules/Utils'
 
 const AddressForm = () => {
-  const address = useMemo((): string => {
-    const address = getAddressInQueryString()
-    return address ?? ''
-  }, [])
+  const [address, setAddress] = useState(getAddressInQueryString() ?? '')
 
   return (
     <Form inline>
       <InputGroup>
-        <Form.Control placeholder="Wallet Address" name="address" value={address} aria-label="Wallet Address" size="sm" />
+        <Form.Control
+          placeholder="Wallet Address"
+          name="address"
+          value={address}
+          onChange={(e) => {
+            setAddress(e.target.value)
+          }}
+          aria-label="Wallet Address"
+          size="sm"
+        />
         <InputGroup.Append>
           <Button variant="primary" size="sm" type="submit">
             Search
