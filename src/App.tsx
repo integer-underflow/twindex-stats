@@ -1,10 +1,10 @@
 import { Container, Row, Col } from 'react-bootstrap'
 import Countdown from './components/Countdown'
 import Header from './components/Header'
-import LPTable from './components/LPTable'
-import MintTable from './components/MintTable'
+import LPTable from './components/LPSection'
+import MintTable from './components/MintSection'
 import PriceCard from './components/PriceCard'
-import StockTable from './components/StockTable'
+import StockTable from './components/StockSection'
 
 const App = () => {
   return (
