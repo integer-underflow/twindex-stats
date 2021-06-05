@@ -64,6 +64,9 @@
     abi: DFI_PROTOCOLS_ABI,
   }
 
+  const REFRESH_TIMEOUT = 30000
+  const REFRESH_TIMEOUT_PRICE = 5000
+
   $('#wallet_address').val(getAddressInQueryString())
 
   stockPriceRender = () => {
@@ -551,7 +554,7 @@ ${lockedTwin} <span class="approx-value">(${lockedTwinValue})</span></td><td cla
     autoLPHoldingTimer = setTimeout(() => {
       lpHoldingsRender()
       setTimeoutLPHolding()
-    }, 30000)
+    }, REFRESH_TIMEOUT)
   }
 
   $("#stock-price-refresh-button").on('click', (e) => {
@@ -568,7 +571,7 @@ ${lockedTwin} <span class="approx-value">(${lockedTwinValue})</span></td><td cla
     autoStockPriceTimer = setTimeout(() => {
       stockPriceRender()
       setTimeoutStockPrice()
-    }, 30000)
+    }, REFRESH_TIMEOUT)
   }
 
   $("#mint-position-refresh-button").on('click', (e) => {
@@ -585,14 +588,14 @@ ${lockedTwin} <span class="approx-value">(${lockedTwinValue})</span></td><td cla
     autoMintPositionTimer = setTimeout(() => {
       mintPositionRender()
       setTimeoutMintPosition()
-    }, 30000)
+    }, REFRESH_TIMEOUT)
   }
 
   setTimeoutPriceUpdate = () => {
     setTimeout(() => {
       priceUpdate()
       setTimeoutPriceUpdate()
-    }, 5000)
+    }, REFRESH_TIMEOUT_PRICE)
   }
 
   stockPriceRender()
