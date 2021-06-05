@@ -93,7 +93,17 @@
       </div>
       <div class="row py-3">
         <div class="col-lg-12">
-          <h2>LP Holdings</h2>
+          <h2>
+            LP Holdings
+            <a
+              id="lp-holding-refresh-button"
+              class="btn btn-outline-light" 
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Auto Refresh">
+              <i class="bi bi-arrow-repeat"></i>
+            </a>
+          </h2>
           <div class="table-responsive">
             <table id="lp_holdings" class="table">
               <thead>
@@ -120,7 +130,17 @@
       </div>
       <div class="row py-3">
         <div class="col-lg-6 col-md-12">
-          <h2>Mint Positions</h2>
+          <h2>
+            Mint Positions
+            <a
+              id="mint-position-refresh-button"
+              class="btn btn-outline-light" 
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Auto Refresh">
+              <i class="bi bi-arrow-repeat"></i>
+            </a>
+          </h2>
           <div class="table-responsive">
             <table id="mint_positions" class="table">
               <col width="25%" />
@@ -154,7 +174,18 @@
           </div>
         </div>
         <div class="col-lg-6">
-          <h2>Stock Price</h2>
+          <h2>
+            Stock Price
+            <a
+              id="stock-price-refresh-button"
+              class="btn btn-outline-light"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Auto Refresh"
+              >
+              <i class="bi bi-arrow-repeat"></i>
+            </a>
+          </h2>
           <div class="table-responsive">
             <table id="stock_price" class="table">
               <thead>
@@ -199,24 +230,15 @@
 
     <script
       src="assets/js/jquery-3.6.0.min.js"
-      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous"
     ></script>
     <script
       src="assets/js/ethers.umd.min.js"
-      integrity="sha256-MpMcxHvgImX4Nypwk+p1BkJKZnbMSzXzIMaT0wJu4Y4="
-      crossorigin="anonymous"
     ></script>
     <script
       src="assets/js/jquery.countdown.min.js"
-      integrity="sha512-lteuRD+aUENrZPTXWFRPTBcDDxIGWe5uu0apPEn+3ZKYDwDaEErIK9rvR0QzUGmUQ55KFE2RqGTVoZsKctGMVw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     ></script>
     <script
       src="assets/js/bootstrap.bundle.min.js"
-      integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
-      crossorigin="anonymous"
     ></script>
     <script src="assets/js/darkmode.min.js"></script>
     <script src="src/IPancakeRouter02.js"></script>
