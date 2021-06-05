@@ -1,7 +1,22 @@
+import { useEffect, useState } from 'react'
 import { Card, Row, Col } from 'react-bootstrap'
+import { getLPs, LPPrice } from '../modules/LiquidityPool'
+import { getAddressInQueryString } from '../modules/Utils'
 import LPCard from './LPCard'
 
-const LPTable = () => {
+const LPSection = () => {
+  const [LPs, setLPs] = useState<LPPrice[]>([])
+
+  useEffect(() => {
+    ;(async () => {
+      const address = getAddressInQueryString()
+      if (address) {
+        const lps = await getLPs(address)
+        setLPs(lps)
+      }
+    })()
+  }, [])
+
   return (
     <Card
       className="p-4"
@@ -30,36 +45,12 @@ const LPTable = () => {
           </Col>
         </Row>
 
-        <LPCard
-          name="DOLLY-AMZN"
-          balance={1.94}
-          assets={{
-            AMZN: 0.031,
-            DOLLY: 123.25,
-          }}
-          reward={{
-            locked: 0.18,
-            available: 0.73,
-          }}
-          value={245.98}
-        />
-
-        <LPCard
-          name="DOLLY-TSLA"
-          balance={1.94}
-          assets={{
-            TSLA: 0.031,
-            DOLLY: 123.25,
-          }}
-          reward={{
-            locked: 0.18,
-            available: 0.73,
-          }}
-          value={245.98}
-        />
+        {LPs.map((lp, index) => {
+          return <LPCard key={index} lp={lp} />
+        })}
       </Card.Body>
     </Card>
   )
 }
 
-export default LPTable
+export default LPSection

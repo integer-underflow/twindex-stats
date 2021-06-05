@@ -13,7 +13,9 @@ export const ROUTERS = {
   },
 }
 
-export const TOKENS = {
+export const TOKENS: {
+  [key: string]: string
+} = {
   TSLA: '0x17aCe02e5C8814BF2EE9eAAFF7902D52c15Fb0f4',
   GOOGL: '0x9C169647471C1C6a72773CfFc50F6Ba285684803',
   AMZN: '0x1085B90544ff5C421D528aAF79Cc65aFc920aC79',

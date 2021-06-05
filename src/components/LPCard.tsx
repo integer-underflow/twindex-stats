@@ -1,28 +1,20 @@
 import React, { useMemo } from 'react'
 import { Card, Row, Col } from 'react-bootstrap'
+import { LPPrice } from '../modules/LiquidityPool'
 
 interface Props {
-  name: string
-  balance: number
-  assets: {
-    [key: string]: number
-  }
-  reward: {
-    locked: number
-    available: number
-  }
-  value: number
+  lp: LPPrice
 }
 
-const LPCard = ({ name, balance, assets, reward, value }: Props) => {
+const LPCard = ({ lp }: Props) => {
   const poolImage = useMemo(() => {
-    switch (name) {
+    switch (`${lp.token1Symbol}-${lp.token0Symbol}`) {
       case 'DOLLY-AMZN':
         return '/image/pool/DOLLY-AMZN.svg'
       case 'DOLLY-TSLA':
         return '/image/pool/DOLLY-TSLA.svg'
     }
-  }, [name])
+  }, [lp.token0Symbol, lp.token1Symbol])
 
   return (
     <Card
@@ -45,34 +37,34 @@ const LPCard = ({ name, balance, assets, reward, value }: Props) => {
                   fontWeight: 300,
                 }}
               >
-                {name} LP
+                {lp.token1Symbol}-{lp.token0Symbol} LP
               </Col>
             </Row>
           </Col>
           <Col md={2} className="d-flex align-items-center justify-content-center">
-            {balance}&nbsp;<span style={{ fontWeight: 200 }}>LP</span>
+            {lp.lpAmount}&nbsp;<span style={{ fontWeight: 200 }}>LP</span>
           </Col>
           <Col md={2} className="d-flex align-items-center justify-content-center flex-column">
-            {Object.entries(assets).map(([key, value]) => {
-              return (
-                <span>
-                  {value} <span style={{ fontWeight: 200 }}>{key}</span>
-                </span>
-              )
-            })}
+            
+          <span>
+              {lp.token1Amount} <span style={{ fontWeight: 200 }}>{lp.token1Symbol}</span>
+            </span>
+            <span>
+              {lp.token0Amount} <span style={{ fontWeight: 200 }}>{lp.token0Symbol}</span>
+            </span>
           </Col>
           <Col md={2} className="d-flex align-items-center justify-content-center">
             <div>
               <div>
-                {reward.available} <small className="text-muted">($X.XX)</small>
+                {lp.unlockedTwin} <small className="text-muted">({lp.unlockedTwinValue})</small>
               </div>
               <div>
-                {reward.locked} <small className="text-muted">($X.XX)</small>
+                {lp.lockedTwin} <small className="text-muted">({lp.lockedTwinValue})</small>
               </div>
             </div>
           </Col>
           <Col md={2} className="d-flex align-items-center justify-content-center text-primary">
-            ${value}
+            {lp.lpValue}
           </Col>
         </Row>
       </Card.Body>

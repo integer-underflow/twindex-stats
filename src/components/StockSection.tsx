@@ -9,7 +9,6 @@ const StockTable = () => {
   useEffect(() => {
     ;(async () => {
       setPrices(await loadStocksPrice())
-      console.log(prices)
     })()
   }, [])
 
