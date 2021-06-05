@@ -1,7 +1,41 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Card, Col, Row } from 'react-bootstrap'
-import { getLockedTWINAmount } from '../modules/LockedTwin'
+import { getLockedTWINAmount, getUnlockDate } from '../modules/LockedTwin'
 import { getAddressInQueryString } from '../modules/Utils'
+import ReactCountdown, { CountdownTimeDelta } from 'react-countdown'
+
+const UnitRender = ({ value, unit }: { value: number; unit: string }) => {
+  return (
+    <>
+      {value}&nbsp;
+      <small
+        style={{
+          fontWeight: 200,
+        }}
+      >
+        {unit}
+      </small>
+    </>
+  )
+}
+
+const CountdownRenderer = ({ days, hours, minutes, seconds, completed }: CountdownTimeDelta) => {
+  if (completed) return <span>Unlocked</span>
+  return (
+    <span>
+      <UnitRender value={days} unit="DAYS" />
+      &nbsp;
+      &nbsp;
+      <UnitRender value={hours} unit="HR" />
+      &nbsp;
+      &nbsp;
+      <UnitRender value={minutes} unit="MIN" />
+      &nbsp;
+      &nbsp;
+      <UnitRender value={seconds} unit="SEC" />
+    </span>
+  )
+}
 
 const Countdown = () => {
   const [locked, setLocked] = useState<{
@@ -11,11 +45,13 @@ const Countdown = () => {
     amount: '0.00',
     valueInUsd: '$0.00',
   })
+  const [unlockDate, setUnlockDate] = useState(0)
 
   useEffect(() => {
     ;(async () => {
       const address = getAddressInQueryString()
       if (address) setLocked(await getLockedTWINAmount(address))
+      setUnlockDate(await getUnlockDate())
     })()
   }, [])
 
@@ -29,7 +65,8 @@ const Countdown = () => {
             <small>TWIN Locked</small>
           </Col>
           <Col md={8} className="text-center">
-            25 DAYS 09 HR 55 MIN 13 SEC <br />
+            <h4 className="m-0">{unlockDate !== 0 && <ReactCountdown date={unlockDate} renderer={CountdownRenderer} />}</h4>
+            {/* 25 DAYS 09 HR 55 MIN 13 SEC <br /> */}
             <small className="text-muted">until rewards unlock</small>
           </Col>
         </Row>
