@@ -1,4 +1,26 @@
+import { useMemo } from 'react'
 import { Container, Nav, Navbar, Form, Button, InputGroup } from 'react-bootstrap'
+import { getAddressInQueryString } from '../modules/Utils'
+
+const AddressForm = () => {
+  const address = useMemo((): string => {
+    const address = getAddressInQueryString()
+    return address ?? ''
+  }, [])
+
+  return (
+    <Form inline>
+      <InputGroup>
+        <Form.Control placeholder="Wallet Address" name="address" value={address} aria-label="Wallet Address" size="sm" />
+        <InputGroup.Append>
+          <Button variant="primary" size="sm" type="submit">
+            Search
+          </Button>
+        </InputGroup.Append>
+      </InputGroup>
+    </Form>
+  )
+}
 
 const Header = () => {
   return (
@@ -27,16 +49,7 @@ const Header = () => {
             {/* <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#link">Link</Nav.Link> */}
           </Nav>
-          <Form inline>
-            <InputGroup>
-              <Form.Control placeholder="Wallet Address" aria-label="Wallet Address" size="sm" />
-              <InputGroup.Append>
-                <Button variant="primary" size="sm">
-                  Search
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
-          </Form>
+          <AddressForm />
         </Navbar.Collapse>
       </Navbar>
     </Container>
