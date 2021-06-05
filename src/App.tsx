@@ -25,7 +25,6 @@ const App = () => {
             <LPTable />
           </Col>
           <Col md="6" className="mt-3">
-            <h2>Mint Positions</h2>
             <MintTable />
           </Col>
           <Col md="6" className="mt-3">
