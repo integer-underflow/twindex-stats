@@ -22,32 +22,30 @@ const LPCard = ({ lp }: Props) => {
       <Card.Body>
         <Row>
           <Col md={4}>
-            <Row>
-              <Col md={4}>
-                <img src={poolImage} alt="" />
-              </Col>
-              <Col
-                className="d-flex align-items-center"
+            <div className="d-flex align-items-center ml-4">
+              <img src={poolImage} alt="" />
+              <div
+                className="d-flex align-items-start flex-column ml-3"
                 style={{
                   fontWeight: 300,
                 }}
               >
-                {lp.token1Symbol}-{lp.token0Symbol} LP
-              </Col>
-            </Row>
+                {lp.token1Symbol}-{lp.token0Symbol} LP <br />
+                <small className="text-primary">
+                  {lp.lpAmount}&nbsp;<span style={{ fontWeight: 200 }}>LP</span>
+                </small>
+              </div>
+            </div>
           </Col>
-          <Col md={2} className="d-flex align-items-center justify-content-center">
-            {lp.lpAmount}&nbsp;<span style={{ fontWeight: 200 }}>LP</span>
-          </Col>
-          <Col md={2} className="d-flex align-items-center justify-content-center flex-column">
+          <Col md={3} className="d-flex align-items-center justify-content-center flex-column">
             <span>
-              {lp.token1Amount} <span style={{ fontWeight: 200 }}>{lp.token1Symbol}</span>
+              {lp.token1Amount} <small style={{ fontWeight: 200 }}>{lp.token1Symbol}</small>
             </span>
             <span>
-              {lp.token0Amount} <span style={{ fontWeight: 200 }}>{lp.token0Symbol}</span>
+              {lp.token0Amount} <small style={{ fontWeight: 200 }}>{lp.token0Symbol}</small>
             </span>
           </Col>
-          <Col md={2} className="d-flex align-items-center justify-content-center">
+          <Col md={3} className="d-flex align-items-center justify-content-center text-center">
             <div>
               <div>
                 {lp.unlockedTwin} <small className="text-muted">({lp.unlockedTwinValue})</small>

@@ -20,11 +20,11 @@ const LPTotalCard = ({ lp }: Props) => {
     >
       <Card.Body>
         <Row>
-          <Col md={6}></Col>
-          <Col md={2} className="d-flex align-items-center justify-content-end">
+          <Col md={4}></Col>
+          <Col md={3} className="d-flex align-items-center justify-content-center">
             <h5>Total</h5>
           </Col>
-          <Col md={2} className="d-flex align-items-center justify-content-center">
+          <Col md={3} className="d-flex align-items-center justify-content-center text-center">
             <div>
               <div>
                 {lp.unlockedTwin} <small className="text-muted">({lp.unlockedTwinValue})</small>

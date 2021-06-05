@@ -34,13 +34,10 @@ const LPSection = () => {
           <Col className="text-center" style={{ fontWeight: 300 }} md={4}>
             LP Tokens Name
           </Col>
-          <Col className="text-center" style={{ fontWeight: 300 }} md={2}>
-            Balance
-          </Col>
-          <Col className="text-center" style={{ fontWeight: 300 }} md={2}>
+          <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
             Underlying Assets
           </Col>
-          <Col className="text-center" style={{ fontWeight: 300 }} md={2}>
+          <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
             Pending TWIN
           </Col>
           <Col className="text-center" style={{ fontWeight: 300 }} md={2}>
