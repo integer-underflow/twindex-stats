@@ -48,10 +48,10 @@ const LPCard = ({ lp }: Props) => {
           <Col md={3} className="d-flex align-items-center justify-content-center text-center">
             <div>
               <div>
-                {lp.unlockedTwin} <small className="text-muted">({lp.unlockedTwinValue})</small>
+                <i className="fa fa-unlock" /> {lp.unlockedTwin} <small className="text-muted">({lp.unlockedTwinValue})</small>
               </div>
               <div>
-                {lp.lockedTwin} <small className="text-muted">({lp.lockedTwinValue})</small>
+                <i className="fa fa-lock" /> {lp.lockedTwin} <small className="text-muted">({lp.lockedTwinValue})</small>
               </div>
             </div>
           </Col>

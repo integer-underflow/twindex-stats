@@ -20,7 +20,7 @@ const AddressForm = () => {
         />
         <InputGroup.Append>
           <Button variant="primary" size="sm" type="submit">
-            Search
+            <i className="fa fa-search" />
           </Button>
         </InputGroup.Append>
       </InputGroup>
