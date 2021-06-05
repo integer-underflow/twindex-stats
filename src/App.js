@@ -1,5 +1,5 @@
-import { Container } from "react-bootstrap";
-import Header from "./components/Header";
+import { Container } from 'react-bootstrap'
+import Header from './components/Header'
 
 const App = () => {
   return (
@@ -7,7 +7,7 @@ const App = () => {
       <Header />
       <Container>Content</Container>
     </>
-  );
-};
+  )
+}
 
-export default App;
+export default App
