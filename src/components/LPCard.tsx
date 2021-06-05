@@ -21,11 +21,11 @@ const LPCard = ({ lp }: Props) => {
     >
       <Card.Body>
         <Row>
-          <Col md={4}>
-            <div className="d-flex align-items-center ml-4">
+          <Col md={12} lg={4}>
+            <div className="d-flex align-items-center justify-content-lg-start justify-content-center ml-0 ml-lg-4">
               <img src={poolImage} alt="" />
               <div
-                className="d-flex align-items-start flex-column ml-3"
+                className="d-flex align-items-center align-items-lg-start flex-column ml-3"
                 style={{
                   fontWeight: 300,
                 }}
@@ -36,8 +36,12 @@ const LPCard = ({ lp }: Props) => {
                 </small>
               </div>
             </div>
+            <hr className="d-lg-none d-block" />
           </Col>
-          <Col md={3} className="d-flex align-items-center justify-content-center flex-column">
+          <Col md={12} lg={3} className="d-flex align-items-center justify-content-center flex-column">
+            <span className="d-lg-none d-block mb-2" style={{ fontWeight: 200 }}>
+              Underlying Assets
+            </span>
             <span>
               {lp.token1Amount} <small style={{ fontWeight: 200 }}>{lp.token1Symbol}</small>
             </span>
@@ -45,8 +49,14 @@ const LPCard = ({ lp }: Props) => {
               {lp.token0Amount} <small style={{ fontWeight: 200 }}>{lp.token0Symbol}</small>
             </span>
           </Col>
-          <Col md={3} className="d-flex align-items-center justify-content-center text-center">
+          <Col md={12} lg={0} className="d-lg-none d-block">
+            <hr />
+          </Col>
+          <Col md={12} lg={3} className="d-flex align-items-center justify-content-center text-center">
             <div>
+              <span className="d-lg-none d-block mb-2" style={{ fontWeight: 200 }}>
+                Pending TWIN
+              </span>
               <div>
                 <i className="fa fa-unlock" /> {lp.unlockedTwin} <small className="text-muted">({lp.unlockedTwinValue})</small>
               </div>
@@ -55,8 +65,16 @@ const LPCard = ({ lp }: Props) => {
               </div>
             </div>
           </Col>
-          <Col md={2} className="d-flex align-items-center justify-content-center text-primary">
-            {lp.lpValue}
+          <Col md={12} lg={0} className="d-lg-none d-block">
+            <hr />
+          </Col>
+          <Col md={12} lg={2} className="d-flex align-items-center justify-content-center text-primary text-center">
+            <div>
+              <span className="d-lg-none d-block mb-2" style={{ fontWeight: 200 }}>
+                Total Value
+              </span>
+              {lp.lpValue}
+            </div>
           </Col>
         </Row>
       </Card.Body>

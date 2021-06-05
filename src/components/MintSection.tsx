@@ -25,7 +25,7 @@ const MintSection = () => {
       <Card.Body className="pt-0">
         <h4 className="mb-4 m-0">Mint Positions</h4>
 
-        <Row className="mb-3 mx-1">
+        <Row className="mb-3 mx-1 d-none d-lg-flex">
           <Col className="text-center" style={{ fontWeight: 300 }} md={5}>
             Asset <br />
             Collateral

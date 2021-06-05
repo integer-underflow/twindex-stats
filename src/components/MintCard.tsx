@@ -18,9 +18,11 @@ const MintCard = ({ position }: Props) => {
         <Row>
           <Col className="text-center" style={{ fontWeight: 300 }} md={5}>
             <div>
+              <span className="d-md-block d-lg-none">Asset: </span>
               {position.loanTokenAmount} <small style={{ fontWeight: 200 }}>{position.loanTokenSymbol}</small>
             </div>
             <div>
+            <span className="d-md-block d-lg-none">Collateral: </span>
               {position.collateralTokenAmount} <small style={{ fontWeight: 200 }}>{position.collateralTokenSymbol}</small>
             </div>
           </Col>
