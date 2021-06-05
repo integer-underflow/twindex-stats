@@ -24,22 +24,22 @@ const App = () => {
       <Header />
       <Container className="mt-3 mb-5">
         <Row>
-          <Col md="3">
+          <Col md="6" lg="3">
             <PriceCard symbol="TWIN" price={twinPrice} />
           </Col>
-          <Col md="3">
+          <Col md="6" lg="3" className="mt-4 mt-md-0">
             <PriceCard symbol="DOP" price={dopplePrice} />
           </Col>
-          <Col md="6">
+          <Col md="12" lg="6" className="mt-4 mt-lg-0">
             <Countdown />
           </Col>
-          <Col md="12" className="mt-4">
+          <Col lg="12" className="mt-4">
             <LPTable />
           </Col>
-          <Col md="6" className="mt-4">
+          <Col md="12" lg="6" className="mt-4">
             <MintSection />
           </Col>
-          <Col md="6" className="mt-4">
+          <Col md="12" lg="6" className="mt-4">
             <StockTable />
           </Col>
         </Row>

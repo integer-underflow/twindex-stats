@@ -20,21 +20,45 @@ const PriceCard = ({ symbol, price }: Props) => {
     <Card className="h-100">
       <Card.Body className="d-flex align-items-center justify-content-center">
         <Row>
-          <Col md="5" className="text-center d-flex align-items-center justify-content-center">
-            <img src={symbolIcon} alt="Placeholder" className="img-fluid h-75" />
+          <Col md="12" lg="5" className="text-center d-flex align-items-center justify-content-center">
+            <img
+              src={symbolIcon}
+              alt="Token Icon"
+              className="img-fluid"
+              style={{
+                height: '3em',
+              }}
+            />
           </Col>
-          <Col md="7" className="d-flex align-items-center">
-            <div>
-              <h6
-                className="m-0"
-                style={{
-                  fontWeight: 300,
-                  opacity: 0.5,
-                }}
-              >
-                {symbol}
-              </h6>
-              <h2 className="m-0">{price}</h2>
+          <Col md="12" lg="7">
+            <div className="d-none d-lg-flex align-items-center">
+              <div>
+                <h6
+                  className="m-0"
+                  style={{
+                    fontWeight: 300,
+                    opacity: 0.5,
+                  }}
+                >
+                  {symbol}
+                </h6>
+                <h2 className="m-0">{price}</h2>
+              </div>
+            </div>
+
+            <div className="d-lg-none d-md-flex align-items-center justify-content-center text-center">
+              <div>
+                <h6
+                  className="m-0 mt-3"
+                  style={{
+                    fontWeight: 300,
+                    opacity: 0.5,
+                  }}
+                >
+                  {symbol}
+                </h6>
+                <h2 className="m-0">{price}</h2>
+              </div>
             </div>
           </Col>
         </Row>

@@ -57,14 +57,14 @@ const Countdown = () => {
     <Card className="h-100">
       <Card.Body>
         <Row className="h-100 d-flex align-items-center">
-          <Col md={4} className="text-center">
+          <Col md={12} lg={4} className="text-center">
             <h4 className="m-0">{locked.amount}</h4>
             <small className="text-muted">({locked.valueInUsd})</small> <br />
             <small>TWIN Locked</small>
           </Col>
-          <Col md={8} className="text-center">
+          <Col md={12} lg={8} className="text-center">
+            <hr className="d-lg-none d-md-block" />
             <h4 className="m-0">{unlockDate !== 0 && <ReactCountdown date={unlockDate} renderer={CountdownRenderer} />}</h4>
-            {/* 25 DAYS 09 HR 55 MIN 13 SEC <br /> */}
             <small className="text-muted">
               until rewards unlock{' '}
               <InfoTooltip
