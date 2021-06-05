@@ -10,9 +10,9 @@ const PriceCard = ({ symbol, price }: Props) => {
   const symbolIcon = useMemo(() => {
     switch (symbol) {
       case 'TWIN':
-        return 'image/twin.svg'
+        return '/twindex-stats/image/twin.svg'
       case 'DOP':
-        return 'image/dop.svg'
+        return '/twindex-stats/image/dop.svg'
     }
   }, [symbol])
 

@@ -8,7 +8,7 @@ interface Props {
 
 const LPCard = ({ lp }: Props) => {
   const poolImage = useMemo(() => {
-    return `/image/pool/${lp.token1Symbol}-${lp.token0Symbol}.svg`
+    return `/twindex-stats/image/pool/${lp.token1Symbol}-${lp.token0Symbol}.svg`
   }, [lp.token0Symbol, lp.token1Symbol])
 
   return (
