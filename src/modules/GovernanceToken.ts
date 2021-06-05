@@ -1,7 +1,7 @@
 import { TOKENS } from './EthersProvider'
 import { getTokenPriceWithDopPair, getOracleDollyPrice, getTokenPriceWithDollyPair, formatUsd } from './Utils'
 
-export const getTwindexPrice = async () => {
+export const getTwinPrice = async () => {
   return formatUsd(await getTokenPriceWithDopPair(TOKENS.TWIN, await getOracleDollyPrice()))
 }
 

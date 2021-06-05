@@ -9,7 +9,7 @@ interface Props {
 const PriceCard = ({ symbol, price }: Props) => {
   const symbolIcon = useMemo(() => {
     switch (symbol) {
-      case 'TWINDEX':
+      case 'TWIN':
         return 'image/twin.svg'
       case 'DOP':
         return 'image/dop.svg'

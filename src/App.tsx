@@ -6,15 +6,15 @@ import LPTable from './components/LPSection'
 import MintSection from './components/MintSection'
 import PriceCard from './components/PriceCard'
 import StockTable from './components/StockSection'
-import { getDopplePrice, getTwindexPrice } from './modules/GovernanceToken'
+import { getDopplePrice, getTwinPrice } from './modules/GovernanceToken'
 
 const App = () => {
-  const [twindexPrice, setTwindexPrice] = useState('')
+  const [twinPrice, setTwinPrice] = useState('')
   const [dopplePrice, setDopplePrice] = useState('')
 
   useEffect(() => {
     ;(async () => {
-      setTwindexPrice(await getTwindexPrice())
+      setTwinPrice(await getTwinPrice())
       setDopplePrice(await getDopplePrice())
     })()
   }, [])
@@ -25,7 +25,7 @@ const App = () => {
       <Container className="mt-3">
         <Row>
           <Col md="3">
-            <PriceCard symbol="TWINDEX" price={twindexPrice} />
+            <PriceCard symbol="TWIN" price={twinPrice} />
           </Col>
           <Col md="3">
             <PriceCard symbol="DOP" price={dopplePrice} />
