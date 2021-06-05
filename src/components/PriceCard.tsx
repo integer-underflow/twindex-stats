@@ -1,6 +1,11 @@
 import { Card, Row, Col } from 'react-bootstrap'
 
-const PriceCard = ({ symbol, price }) => {
+interface Props {
+  symbol: string
+  price: number
+}
+
+const PriceCard = ({ symbol, price }: Props) => {
   return (
     <Card>
       <Card.Body>
