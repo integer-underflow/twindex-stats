@@ -29,14 +29,14 @@ $green: darken(#28a745, $color-darker-percent-none);
 $teal: darken(#20c997, $color-darker-percent-none);
 $cyan: lighten(#17a2b8, $color-darker-percent-none);
 
-$primary: $blue;
-$secondary: $gray-600;
-$success: $green;
-$info: $cyan;
-$warning: $orange;
-$danger: $red;
-$light: $gray-300;
-$dark: $gray-800;
+$primary: $blue !default;
+$secondary: $gray-600 !default;
+$success: $green !default;
+$info: $cyan !default;
+$warning: $orange !default;
+$danger: $red !default;
+$light: $gray-300 !default;
+$dark: $gray-800 !default;
 
 //$body-bg:       $gray-900; //#1E1E1E;
 $body-bg: #111927;
