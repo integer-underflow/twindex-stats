@@ -1,7 +1,18 @@
+import React, { useEffect, useState } from 'react'
 import { Card, Row, Col } from 'react-bootstrap'
+import { loadStocksPrice, StockPrice } from '../modules/Stock'
 import StockCard from './StockCard'
 
 const StockTable = () => {
+  const [prices, setPrices] = useState<StockPrice[]>([])
+
+  useEffect(() => {
+    ;(async () => {
+      setPrices(await loadStocksPrice())
+      console.log(prices)
+    })()
+  }, [])
+
   return (
     <Card
       className="p-4"
@@ -27,21 +38,9 @@ const StockTable = () => {
           </Col>
         </Row>
 
-        <StockCard
-          symbol="AMZN"
-          price={{
-            twindex: 4000,
-            oracle: 3000,
-          }}
-        />
-
-        <StockCard
-          symbol="TSLA"
-          price={{
-            twindex: 756.88,
-            oracle: 599.29,
-          }}
-        />
+        {prices.map((price) => {
+          return <StockCard key={price.token} price={price} />
+        })}
       </Card.Body>
     </Card>
   )

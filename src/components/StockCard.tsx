@@ -1,18 +1,14 @@
-import React, { useMemo } from 'react'
 import { Card, Row, Col } from 'react-bootstrap'
+import { StockPrice } from '../modules/Stock'
 
 interface Props {
-  symbol: string
-  price: {
-    twindex: number
-    oracle: number
-  }
+  price: StockPrice
 }
 
-const StockCard = ({ symbol, price }: Props) => {
-  const priceDiff = useMemo(() => {
-    return Math.floor(((price.twindex - price.oracle) / price.oracle) * 100)
-  }, [price.twindex, price.oracle])
+const StockCard = ({ price }: Props) => {
+  // const priceDiff = useMemo(() => {
+  //   return Math.floor(((price.twindex - price.oracle) / price.oracle) * 100)
+  // }, [price.twindex, price.oracle])
 
   return (
     <Card
@@ -25,16 +21,16 @@ const StockCard = ({ symbol, price }: Props) => {
       <Card.Body className="py-2">
         <Row>
           <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
-            {symbol}
+            {price.token}
           </Col>
           <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
-            ${price.twindex}
+            {price.stockPrice}
           </Col>
           <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
-            ${price.oracle}
+            {price.oraclePrice}
           </Col>
           <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
-            {priceDiff}%
+            {price.diff}
           </Col>
         </Row>
       </Card.Body>
