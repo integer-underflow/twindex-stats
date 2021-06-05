@@ -3,16 +3,19 @@ import { Card, Row, Col } from 'react-bootstrap'
 import { getLPs, LPPrice } from '../modules/LiquidityPool'
 import { getAddressInQueryString } from '../modules/Utils'
 import LPCard from './LPCard'
+import LPTotalCard from './LPTotalCard'
 
 const LPSection = () => {
   const [LPs, setLPs] = useState<LPPrice[]>([])
+  const [totalLP, setTotalLP] = useState<any>({})
 
   useEffect(() => {
     ;(async () => {
       const address = getAddressInQueryString()
       if (address) {
         const lps = await getLPs(address)
-        setLPs(lps)
+        setLPs(lps.lps)
+        setTotalLP(lps.total)
       }
     })()
   }, [])
@@ -48,6 +51,7 @@ const LPSection = () => {
         {LPs.map((lp, index) => {
           return <LPCard key={index} lp={lp} />
         })}
+        <LPTotalCard lp={totalLP} />
       </Card.Body>
     </Card>
   )

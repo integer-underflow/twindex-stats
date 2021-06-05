@@ -46,6 +46,8 @@ export interface LPPrice {
   lockedTwin: string
   lockedTwinValue: string
   lpValue: string
+  unformattedLpValue: any
+  pendingTwin: any
 }
 
 const getDollyLPs = async (address: string): Promise<LPPrice[]> => {
@@ -79,12 +81,12 @@ const getDollyLPs = async (address: string): Promise<LPPrice[]> => {
           lockedTwin: new Intl.NumberFormat().format(parseFloat(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2))),
           lockedTwinValue: formatUsd(lockedTwinValue),
           lpValue: formatUsd(lpValue),
+          unformattedLpValue: lpValue,
+          pendingTwin,
         }
       } else {
         return undefined
       }
-
-      //   return [lpValue, pendingTwin]
     })
   )
 
@@ -137,12 +139,12 @@ const getDopLPs = async (address: string): Promise<LPPrice[]> => {
           lockedTwin: new Intl.NumberFormat().format(parseFloat(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2))),
           lockedTwinValue: formatUsd(lockedTwinValue),
           lpValue: formatUsd(lpValue),
+          unformattedLpValue: lpValue,
+          pendingTwin,
         }
       } else {
         return undefined
       }
-
-      // return [lpValue, pendingTwin]
     })
   )
 
@@ -150,7 +152,30 @@ const getDopLPs = async (address: string): Promise<LPPrice[]> => {
 }
 
 export const getLPs = async (address: string) => {
-  return [...(await getDollyLPs(address)), ...(await getDopLPs(address))]
+  const dollyLPs = await getDollyLPs(address)
+  const dopLPs = await getDopLPs(address)
+  const combineLPs = [...dollyLPs, ...dopLPs]
+
+  const totalValue = combineLPs.map((r) => r.unformattedLpValue).reduce((sum, value) => sum.add(value))
+  const totalPendingTwins = combineLPs.map((r) => r.pendingTwin).reduce((sum, value) => sum.add(value))
+
+  const dollyPrice = await getOracleDollyPrice()
+  const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+  const unlockedTwin = totalPendingTwins.mul(20).div(100)
+  const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+  const lockedTwin = totalPendingTwins.mul(80).div(100)
+  const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+
+  return {
+    lps: combineLPs,
+    total: {
+      unlockedTwin: new Intl.NumberFormat().format(parseFloat(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2))),
+      unlockedTwinValue: formatUsd(unlockedTwinValue),
+      lockedTwin: new Intl.NumberFormat().format(parseFloat(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2))),
+      lockedTwinValue: formatUsd(lockedTwinValue),
+      lpValue: formatUsd(totalValue),
+    },
+  }
 }
 
 const getReserves = async (pairAddress: string) => {
