@@ -3,6 +3,7 @@ import { Card, Col, Row } from 'react-bootstrap'
 import { getLockedTWINAmount, getUnlockDate } from '../modules/LockedTwin'
 import { getAddressInQueryString } from '../modules/Utils'
 import ReactCountdown, { CountdownTimeDelta } from 'react-countdown'
+import InfoTooltip from './InfoTooltip'
 
 const UnitRender = ({ value, unit }: { value: number; unit: string }) => {
   return (
@@ -24,14 +25,11 @@ const CountdownRenderer = ({ days, hours, minutes, seconds, completed }: Countdo
   return (
     <span>
       <UnitRender value={days} unit="DAYS" />
-      &nbsp;
-      &nbsp;
+      &nbsp; &nbsp;
       <UnitRender value={hours} unit="HR" />
-      &nbsp;
-      &nbsp;
+      &nbsp; &nbsp;
       <UnitRender value={minutes} unit="MIN" />
-      &nbsp;
-      &nbsp;
+      &nbsp; &nbsp;
       <UnitRender value={seconds} unit="SEC" />
     </span>
   )
@@ -67,7 +65,13 @@ const Countdown = () => {
           <Col md={8} className="text-center">
             <h4 className="m-0">{unlockDate !== 0 && <ReactCountdown date={unlockDate} renderer={CountdownRenderer} />}</h4>
             {/* 25 DAYS 09 HR 55 MIN 13 SEC <br /> */}
-            <small className="text-muted">until rewards unlock</small>
+            <small className="text-muted">
+              until rewards unlock{' '}
+              <InfoTooltip
+                placement="right"
+                text="The locked rewards will unlock approximately 30 days, and then be released linearly across one month within blocks 8763010->9627010"
+              />
+            </small>
           </Col>
         </Row>
       </Card.Body>

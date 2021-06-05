@@ -3,6 +3,7 @@ import { Card, Row, Col } from 'react-bootstrap'
 import MintCard from './MintCard'
 import { getMintPositions, MintPosition } from '../modules/Loan'
 import { getAddressInQueryString } from '../modules/Utils'
+import InfoTooltip from './InfoTooltip'
 
 const MintSection = () => {
   const [positions, setPositions] = useState<MintPosition[]>([])
@@ -30,7 +31,8 @@ const MintSection = () => {
             Collateral
           </Col>
           <Col className="d-flex align-items-center justify-content-center" style={{ fontWeight: 300 }} md={7}>
-            Health
+            Health&nbsp;
+            <InfoTooltip text="Your position could be liquidated if the health reaches 0%" />
           </Col>
         </Row>
 
