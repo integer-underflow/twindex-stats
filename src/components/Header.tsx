@@ -3,7 +3,7 @@ import { Container, Nav, Navbar } from 'react-bootstrap'
 const Header = () => {
   return (
     <Container>
-      <Navbar>
+      <Navbar variant="dark">
         <Navbar.Brand href="#home">TWINDEX Stats</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

@@ -1609,6 +1609,15 @@
     "minimatch" "^3.0.4"
     "strip-json-comments" "^3.1.1"
 
+"@forevolve/bootstrap-dark@^1.2.0-g6c89781692":
+  "integrity" "sha512-fVFK633GFhAz7mn3jao1VWAZnlCAO1FBrsNf2INl1Bl5OWZFSxqME3f6WPLfkvUSQzhpR8PFf3HvQPWB7stm8A=="
+  "resolved" "https://registry.npmjs.org/@forevolve/bootstrap-dark/-/bootstrap-dark-1.2.0-g6c89781692.tgz"
+  "version" "1.2.0-g6c89781692"
+  dependencies:
+    "bootstrap" "^4.6.0"
+    "jquery" "^3.5.1"
+    "popper.js" "^1.16.1"
+
 "@hapi/address@2.x.x":
   "integrity" "sha512-QD1PhQk+s31P1ixsX0H0Suoupp3VMXzIVMSwobR3F3MSUO2YCV0B7xqLcUw/Bh8yuvd3LhpyqLQWTNcRmp6IdQ=="
   "resolved" "https://registry.npmjs.org/@hapi/address/-/address-2.1.4.tgz"
@@ -7561,7 +7570,7 @@
     "import-local" "^3.0.2"
     "jest-cli" "^26.6.0"
 
-"jquery@1.9.1 - 3":
+"jquery@^3.5.1", "jquery@1.9.1 - 3":
   "integrity" "sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw=="
   "resolved" "https://registry.npmjs.org/jquery/-/jquery-3.6.0.tgz"
   "version" "3.6.0"
