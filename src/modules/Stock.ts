@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import { PRICE_FEEDS, provider, TOKENS } from './EthersProvider'
-import { formatUsd, getTokenPriceWithDollyPair } from './Utils'
+import { formatUsd, getOracleDollyPrice, getTokenPriceWithDollyPair } from './Utils'
 
 export interface StockPrice {
   token: string
@@ -29,20 +29,6 @@ export const loadStocksPrice = async (): Promise<StockPrice[]> => {
         }
       })
   )
-}
-
-/**
- * Get Dolly price in USD from the oracle
- * @returns dolly price (18 decimal precision)
- */
-const getOracleDollyPrice = async () => {
-  const oracle = new ethers.Contract(
-    '0xa442c34d88f4091880AEEE16500B088306562caa',
-    ['function latestAnswer() external view returns (uint256 price)'],
-    provider
-  )
-  const price = (await oracle.functions.latestAnswer())['price']
-  return price
 }
 
 /**

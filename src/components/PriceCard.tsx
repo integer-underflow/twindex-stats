@@ -3,7 +3,7 @@ import { Card, Row, Col } from 'react-bootstrap'
 
 interface Props {
   symbol: string
-  price: number
+  price: string
 }
 
 const PriceCard = ({ symbol, price }: Props) => {
@@ -34,7 +34,7 @@ const PriceCard = ({ symbol, price }: Props) => {
               >
                 {symbol}
               </h6>
-              <h2 className="m-0">${price}</h2>
+              <h2 className="m-0">{price}</h2>
             </div>
           </Col>
         </Row>
