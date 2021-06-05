@@ -22,7 +22,7 @@ const StockTable = () => {
       <Card.Body className="pt-0">
         <h4 className="mb-4 m-0">Stock Price</h4>
 
-        <Row className="mb-4 mx-1">
+        <Row className="mb-3 mx-1">
           <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
             Symbol
           </Col>
@@ -33,7 +33,7 @@ const StockTable = () => {
             Oracle
           </Col>
           <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
-            Diff
+            Difference
           </Col>
         </Row>
 

@@ -21,7 +21,7 @@ const StockCard = ({ price }: Props) => {
       <Card.Body className="py-2">
         <Row>
           <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
-            {price.token}
+            <span className="text-primary">{price.token}</span>
           </Col>
           <Col className="text-center" style={{ fontWeight: 300 }} md={3}>
             {price.stockPrice}
