@@ -90,7 +90,7 @@ const getDollyLPs = async (address: string): Promise<LPPrice[]> => {
     })
   )
 
-  return <LPPrice[]>LPs.filter((pair) => pair !== undefined)
+  return LPs.filter((pair) => pair !== undefined) as LPPrice[]
 }
 
 const getDopLPs = async (address: string): Promise<LPPrice[]> => {
@@ -105,7 +105,7 @@ const getDopLPs = async (address: string): Promise<LPPrice[]> => {
         tokenPrice = await getTokenPriceWithDollyPair(TOKENS[token], dollyPrice)
       }
       const totalSupply = await getTotalLpSupply(pairAddress)
-      const [token0, _] = await getTokenAddressesFromPair(pairAddress)
+      const [token0] = await getTokenAddressesFromPair(pairAddress)
 
       let totalStockReserve, totalDopReserve, lpPrice
       if (TOKENS[token] === token0) {
@@ -148,7 +148,7 @@ const getDopLPs = async (address: string): Promise<LPPrice[]> => {
     })
   )
 
-  return <LPPrice[]>LPs.filter((pair) => pair !== undefined)
+  return LPs.filter((pair) => pair !== undefined) as LPPrice[]
 }
 
 export const getLPs = async (address: string) => {
