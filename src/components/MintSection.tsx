@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Card, Row, Col } from 'react-bootstrap'
+import { Card, Row, Col, Spinner } from 'react-bootstrap'
 import MintCard from './MintCard'
 import { getMintPositions, MintPosition } from '../modules/Loan'
 import { getAddressInQueryString } from '../modules/Utils'
 import InfoTooltip from './InfoTooltip'
 
 const MintSection = () => {
-  const [positions, setPositions] = useState<MintPosition[]>([])
+  const [positions, setPositions] = useState<MintPosition[] | undefined>([])
 
   useEffect(() => {
     ;(async () => {
       const address = getAddressInQueryString()
       if (address) setPositions(await getMintPositions(address))
+      else setPositions(undefined)
     })()
   }, [])
 
@@ -36,9 +37,21 @@ const MintSection = () => {
           </Col>
         </Row>
 
-        {positions.map((position, index) => {
-          return <MintCard key={`${position.collateralTokenSymbol}-${position.loanTokenSymbol}-${index}`} position={position} />
-        })}
+        {positions !== undefined ? (
+          <>
+            {!positions.length && (
+              <div className="text-center w-100 mt-5 mb-4">
+                <Spinner animation="border" />
+              </div>
+            )}
+
+            {positions.map((position, index) => {
+              return <MintCard key={`${position.collateralTokenSymbol}-${position.loanTokenSymbol}-${index}`} position={position} />
+            })}
+          </>
+        ) : (
+          <div className="text-center text-muted w-100 mt-5 mb-4">No Wallet Connected </div>
+        )}
       </Card.Body>
     </Card>
   )

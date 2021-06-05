@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Row, Col } from 'react-bootstrap'
+import { Card, Row, Col, Spinner } from 'react-bootstrap'
 import { loadStocksPrice, StockPrice } from '../modules/Stock'
 import StockCard from './StockCard'
 
@@ -37,9 +37,17 @@ const StockTable = () => {
           </Col>
         </Row>
 
-        {prices.map((price) => {
-          return <StockCard key={price.token} price={price} />
-        })}
+        {!prices.length ? (
+          <div className="text-center w-100 mt-5 mb-4">
+            <Spinner animation="border" />
+          </div>
+        ) : (
+          <>
+            {prices.map((price) => {
+              return <StockCard key={price.token} price={price} />
+            })}
+          </>
+        )}
       </Card.Body>
     </Card>
   )

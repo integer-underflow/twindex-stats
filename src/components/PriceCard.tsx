@@ -16,6 +16,11 @@ const PriceCard = ({ symbol, price }: Props) => {
     }
   }, [symbol])
 
+  const priceDisplay = useMemo(() => {
+    if (price === '') return '$---'
+    return price
+  }, [price])
+
   return (
     <Card className="h-100">
       <Card.Body className="d-flex align-items-center justify-content-center">
@@ -42,7 +47,7 @@ const PriceCard = ({ symbol, price }: Props) => {
                 >
                   {symbol}
                 </h6>
-                <h2 className="m-0">{price}</h2>
+                <h2 className="m-0">{priceDisplay}</h2>
               </div>
             </div>
 
@@ -57,7 +62,7 @@ const PriceCard = ({ symbol, price }: Props) => {
                 >
                   {symbol}
                 </h6>
-                <h2 className="m-0">{price}</h2>
+                <h2 className="m-0">{priceDisplay}</h2>
               </div>
             </div>
           </Col>

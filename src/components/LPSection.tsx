@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Card, Row, Col } from 'react-bootstrap'
+import { Card, Row, Col, Spinner } from 'react-bootstrap'
 import { getLPs, LPPrice } from '../modules/LiquidityPool'
 import { getAddressInQueryString } from '../modules/Utils'
 import LPCard from './LPCard'
 import LPTotalCard from './LPTotalCard'
 
 const LPSection = () => {
-  const [LPs, setLPs] = useState<LPPrice[]>([])
+  const [LPs, setLPs] = useState<LPPrice[] | undefined>([])
   const [totalLP, setTotalLP] = useState<any>({})
 
   useEffect(() => {
@@ -16,6 +16,8 @@ const LPSection = () => {
         const lps = await getLPs(address)
         setLPs(lps.lps)
         setTotalLP(lps.total)
+      } else {
+        setLPs(undefined)
       }
     })()
   }, [])
@@ -45,10 +47,23 @@ const LPSection = () => {
           </Col>
         </Row>
 
-        {LPs.map((lp, index) => {
-          return <LPCard key={index} lp={lp} />
-        })}
-        <LPTotalCard lp={totalLP} />
+        {LPs !== undefined ? (
+          <>
+            {!LPs.length && (
+              <div className="text-center w-100 mt-5 mb-4">
+                <Spinner animation="border" />
+              </div>
+            )}
+
+            {LPs.map((lp, index) => {
+              return <LPCard key={index} lp={lp} />
+            })}
+
+            {!!LPs.length && <LPTotalCard lp={totalLP} />}
+          </>
+        ) : (
+          <div className="text-center text-muted w-100 mt-5 mb-4">No Wallet Connected </div>
+        )}
       </Card.Body>
     </Card>
   )
