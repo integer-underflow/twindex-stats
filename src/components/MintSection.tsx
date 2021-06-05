@@ -36,8 +36,8 @@ const MintSection = () => {
           </Col>
         </Row>
 
-        {positions.map((position) => {
-          return <MintCard key={`${position.collateralTokenSymbol}-${position.loanTokenSymbol}`} position={position} />
+        {positions.map((position, index) => {
+          return <MintCard key={`${position.collateralTokenSymbol}-${position.loanTokenSymbol}-${index}`} position={position} />
         })}
       </Card.Body>
     </Card>
