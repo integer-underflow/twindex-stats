@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { IPANCAKE_ROUTER02_ABI } from './ABI'
+import { DFI_PROTOCOLS_ABI, IPANCAKE_ROUTER02_ABI } from './ABI'
 
 export const provider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed1.binance.org', {
   name: 'Binance Smart Chain',
@@ -26,4 +26,9 @@ export const TOKENS = {
 export const PRICE_FEEDS = {
   address: '0xd4f061a6a276f8B0Ae83D210D838B45fCC7532B2',
   abi: ['function queryRate(address, address) external view returns (uint256 rate, uint256 precision)'],
+}
+
+export const DFI_PROTOCOLS = {
+  address: '0x37f5a7D8bBB1cc0307985D00DE520fE30630790c',
+  abi: DFI_PROTOCOLS_ABI,
 }

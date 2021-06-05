@@ -39,3 +39,16 @@ export const getOracleDollyPrice = async () => {
 export const formatUsd = (bigNumber: any) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(ethers.utils.formatEther(bigNumber)))
 }
+
+export const objectFlip = (obj: { [key: string]: string }) => {
+  const ret: { [key: string]: string } = {}
+  Object.keys(obj).forEach((key) => {
+    ret[obj[key]] = key
+  })
+  return ret
+}
+
+export const getAddressInQueryString = () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  return urlParams.get('address')
+}

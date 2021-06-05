@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import Countdown from './components/Countdown'
 import Header from './components/Header'
 import LPTable from './components/LPSection'
-import MintTable from './components/MintSection'
+import MintSection from './components/MintSection'
 import PriceCard from './components/PriceCard'
 import StockTable from './components/StockSection'
 import { getDopplePrice, getTwindexPrice } from './modules/GovernanceToken'
@@ -37,7 +37,7 @@ const App = () => {
             <LPTable />
           </Col>
           <Col md="6" className="mt-3">
-            <MintTable />
+            <MintSection />
           </Col>
           <Col md="6" className="mt-3">
             <StockTable />

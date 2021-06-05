@@ -1,18 +1,11 @@
 import { Card, Row, Col, ProgressBar } from 'react-bootstrap'
+import { MintPosition } from '../modules/Loan'
 
 interface Props {
-  asset: {
-    name: string
-    value: number
-  }
-  collateral: {
-    name: string
-    value: number
-  }
-  health: number
+  position: MintPosition
 }
 
-const MintCard = ({ asset, collateral, health }: Props) => {
+const MintCard = ({ position }: Props) => {
   return (
     <Card
       style={{
@@ -24,20 +17,21 @@ const MintCard = ({ asset, collateral, health }: Props) => {
       <Card.Body className="py-2">
         <Row>
           <Col className="text-center" style={{ fontWeight: 300 }} md={4}>
-            {asset.value} {asset.name}
+            {position.loanTokenAmount} {position.loanTokenSymbol}
           </Col>
           <Col className="text-center" style={{ fontWeight: 300 }} md={4}>
-            {collateral.value} {collateral.name}
+            {position.collateralTokenAmount} {position.collateralTokenSymbol}
           </Col>
           <Col className="text-center d-flex align-items-center" style={{ fontWeight: 300 }} md={4}>
             <div className="w-100">
               <ProgressBar
-                now={health}
-                label={`${health}%`}
                 style={{
                   borderRadius: 30,
                 }}
-              />
+              >
+                <ProgressBar variant="danger" now={parseFloat(position.maintenanceMargin)} />
+                <ProgressBar now={parseFloat(position.margin)} label={`${position.margin}%`} />
+              </ProgressBar>
             </div>
           </Col>
         </Row>

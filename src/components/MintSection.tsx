@@ -1,7 +1,19 @@
+import { useEffect, useState } from 'react'
 import { Card, Row, Col } from 'react-bootstrap'
 import MintCard from './MintCard'
+import { getMintPositions, MintPosition } from '../modules/Loan'
+import { getAddressInQueryString } from '../modules/Utils'
 
-const MintTable = () => {
+const MintSection = () => {
+  const [positions, setPositions] = useState<MintPosition[]>([])
+
+  useEffect(() => {
+    ;(async () => {
+      const address = getAddressInQueryString()
+      if (address) setPositions(await getMintPositions(address))
+    })()
+  }, [])
+
   return (
     <Card
       className="p-4"
@@ -24,32 +36,12 @@ const MintTable = () => {
           </Col>
         </Row>
 
-        <MintCard
-          asset={{
-            name: 'AMZN',
-            value: 1,
-          }}
-          collateral={{
-            name: 'DOLLY',
-            value: 125,
-          }}
-          health={50}
-        />
-
-        <MintCard
-          asset={{
-            name: 'TSLA',
-            value: 1,
-          }}
-          collateral={{
-            name: 'DOLLY',
-            value: 233,
-          }}
-          health={80}
-        />
+        {positions.map((position) => {
+          return <MintCard key={`${position.collateralTokenSymbol}-${position.loanTokenSymbol}`} position={position} />
+        })}
       </Card.Body>
     </Card>
   )
 }
 
-export default MintTable
+export default MintSection
