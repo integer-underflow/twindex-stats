@@ -64,167 +64,184 @@
     abi: DFI_PROTOCOLS_ABI,
   }
 
+  const REFRESH_TIMEOUT = 30000
+  const REFRESH_TIMEOUT_PRICE = 5000
+
   $('#wallet_address').val(getAddressInQueryString())
 
-  // Stock Price
-  Promise.all(
-    Object.entries(TOKENS).map(async ([token, address]) => {
-      if (token === 'DOLLY' || token === 'DOP' || token === 'TWIN') return
+  stockPriceRender = () => {
+    // Stock Price
+    $('#stock_price > tbody > tr:not(.loading)').remove()
+    $('#stock_price .loading').show()
+    Promise.all(
+      Object.entries(TOKENS).map(async ([token, address]) => {
+        if (token === 'DOLLY' || token === 'DOP' || token === 'TWIN') return
 
-      const dollyPrice = await getOracleDollyPrice()
-      const stockPrice = await getTokenPriceWithDollyPair(address, dollyPrice)
-      const oracleStockPrice = await getOracleStockPrice(address, dollyPrice)
-      const diff = getDiff(stockPrice, oracleStockPrice)
+        const dollyPrice = await getOracleDollyPrice()
+        const stockPrice = await getTokenPriceWithDollyPair(address, dollyPrice)
+        const oracleStockPrice = await getOracleStockPrice(address, dollyPrice)
+        const diff = getDiff(stockPrice, oracleStockPrice)
 
-      renderStockDiff(token, formatUsd(stockPrice), formatUsd(oracleStockPrice), Number(ethers.utils.formatEther(diff)).toFixed(2) + '%')
+        renderStockDiff(token, formatUsd(stockPrice), formatUsd(oracleStockPrice), Number(ethers.utils.formatEther(diff)).toFixed(2) + '%')
+      })
+    ).then(() => {
+      $('#stock_price .loading').hide()
     })
-  ).then(() => {
-    $('#stock_price .loading').hide()
-  })
+  }
 
-  Promise.all([
-    // Stock - DOLLY LP
-    ...Object.entries(DOLLY_PAIRS).map(async ([token, pairAddress]) => {
+  lpHoldingsRender = () => {
+    $('#lp_holdings > tbody > tr:not(.loading)').remove()
+    $('#lp_holdings .loading').show()
+    Promise.all([
+      // Stock - DOLLY LP
+      ...Object.entries(DOLLY_PAIRS).map(async ([token, pairAddress]) => {
+        const dollyPrice = await getOracleDollyPrice()
+        const stockPrice = await getTokenPriceWithDollyPair(TOKENS[token], dollyPrice)
+        const [totalStockReserve, totalDollyReserve] = await getReserves(pairAddress)
+        const totalSupply = await getTotalLpSupply(pairAddress)
+        const lpPrice = getLpPrice(totalSupply, stockPrice, dollyPrice, totalStockReserve, totalDollyReserve)
+        const lpAmount = await getLpAmount(pairAddress, getAddressInQueryString())
+        const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
+        const [stockAmount, dollyAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDollyReserve)
+  
+        const pendingTwin = await getPendingTwin(getPoolIdFromPairAddress(pairAddress), getAddressInQueryString())
+        const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+        const unlockedTwin = pendingTwin.mul(20).div(100)
+        const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+        const lockedTwin = pendingTwin.mul(80).div(100)
+        const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+  
+        if (lpAmount.gt(0)) {
+          renderLpPrice(
+            token,
+            'DOLLY',
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(stockAmount)).toFixed(4)),
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(dollyAmount)).toFixed(2)),
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lpAmount)).toFixed(2)),
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
+            formatUsd(unlockedTwinValue),
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
+            formatUsd(lockedTwinValue),
+            formatUsd(lpValue)
+          )
+        }
+  
+        return [lpValue, pendingTwin]
+      }),
+      // TWIN, Stock - DOP LP
+      ...Object.entries(DOP_PAIRS).map(async ([token, pairAddress]) => {
+        const dollyPrice = await getOracleDollyPrice()
+        const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
+        let tokenPrice
+        if (token === 'TWIN') {
+          tokenPrice = await getTokenPriceWithDopPair(TOKENS[token], dollyPrice)
+        } else {
+          tokenPrice = await getTokenPriceWithDollyPair(TOKENS[token], dollyPrice)
+        }
+        const totalSupply = await getTotalLpSupply(pairAddress)
+        const [token0, _] = await getTokenAddressesFromPair(pairAddress)
+  
+        let totalStockReserve, totalDopReserve, lpPrice
+        if (TOKENS[token] === token0) {
+          ;[totalStockReserve, totalDopReserve] = await getReserves(pairAddress)
+          lpPrice = getLpPrice(totalSupply, tokenPrice, dopPrice, totalStockReserve, totalDopReserve)
+        } else {
+          ;[totalDopReserve, totalStockReserve] = await getReserves(pairAddress)
+          lpPrice = getLpPrice(totalSupply, dopPrice, tokenPrice, totalDopReserve, totalStockReserve)
+        }
+  
+        const lpAmount = await getLpAmount(pairAddress, getAddressInQueryString())
+        const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
+        const [stockAmount, dopAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDopReserve)
+  
+        const pendingTwin = await getPendingTwin(getPoolIdFromPairAddress(pairAddress), getAddressInQueryString())
+        const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+        const unlockedTwin = pendingTwin.mul(20).div(100)
+        const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+        const lockedTwin = pendingTwin.mul(80).div(100)
+        const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+  
+        if (lpAmount.gt(0)) {
+          renderLpPrice(
+            token,
+            'DOP',
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(stockAmount)).toFixed(4)),
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(dopAmount)).toFixed(2)),
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lpAmount)).toFixed(2)),
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
+            formatUsd(unlockedTwinValue),
+            new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
+            formatUsd(lockedTwinValue),
+            formatUsd(lpValue)
+          )
+        }
+  
+        return [lpValue, pendingTwin]
+      }),
+    ]).then(async (results) => {
+      const totalValue = results.map((r) => r[0]).reduce((sum, value) => sum.add(value))
+      const totalPendingTwins = results.map((r) => r[1]).reduce((sum, value) => sum.add(value))
+  
       const dollyPrice = await getOracleDollyPrice()
-      const stockPrice = await getTokenPriceWithDollyPair(TOKENS[token], dollyPrice)
-      const [totalStockReserve, totalDollyReserve] = await getReserves(pairAddress)
-      const totalSupply = await getTotalLpSupply(pairAddress)
-      const lpPrice = getLpPrice(totalSupply, stockPrice, dollyPrice, totalStockReserve, totalDollyReserve)
-      const lpAmount = await getLpAmount(pairAddress, getAddressInQueryString())
-      const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
-      const [stockAmount, dollyAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDollyReserve)
-
-      const pendingTwin = await getPendingTwin(getPoolIdFromPairAddress(pairAddress), getAddressInQueryString())
       const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
-      const unlockedTwin = pendingTwin.mul(20).div(100)
+      const unlockedTwin = totalPendingTwins.mul(20).div(100)
       const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
-      const lockedTwin = pendingTwin.mul(80).div(100)
+      const lockedTwin = totalPendingTwins.mul(80).div(100)
       const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
-
-      if (lpAmount.gt(0)) {
-        renderLpPrice(
-          token,
-          'DOLLY',
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(stockAmount)).toFixed(4)),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(dollyAmount)).toFixed(2)),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lpAmount)).toFixed(2)),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
-          formatUsd(unlockedTwinValue),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
-          formatUsd(lockedTwinValue),
-          formatUsd(lpValue)
-        )
-      }
-
-      return [lpValue, pendingTwin]
-    }),
-    // TWIN, Stock - DOP LP
-    ...Object.entries(DOP_PAIRS).map(async ([token, pairAddress]) => {
-      const dollyPrice = await getOracleDollyPrice()
-      const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
-      let tokenPrice
-      if (token === 'TWIN') {
-        tokenPrice = await getTokenPriceWithDopPair(TOKENS[token], dollyPrice)
-      } else {
-        tokenPrice = await getTokenPriceWithDollyPair(TOKENS[token], dollyPrice)
-      }
-      const totalSupply = await getTotalLpSupply(pairAddress)
-      const [token0, _] = await getTokenAddressesFromPair(pairAddress)
-
-      let totalStockReserve, totalDopReserve, lpPrice
-      if (TOKENS[token] === token0) {
-        ;[totalStockReserve, totalDopReserve] = await getReserves(pairAddress)
-        lpPrice = getLpPrice(totalSupply, tokenPrice, dopPrice, totalStockReserve, totalDopReserve)
-      } else {
-        ;[totalDopReserve, totalStockReserve] = await getReserves(pairAddress)
-        lpPrice = getLpPrice(totalSupply, dopPrice, tokenPrice, totalDopReserve, totalStockReserve)
-      }
-
-      const lpAmount = await getLpAmount(pairAddress, getAddressInQueryString())
-      const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
-      const [stockAmount, dopAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDopReserve)
-
-      const pendingTwin = await getPendingTwin(getPoolIdFromPairAddress(pairAddress), getAddressInQueryString())
-      const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
-      const unlockedTwin = pendingTwin.mul(20).div(100)
-      const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
-      const lockedTwin = pendingTwin.mul(80).div(100)
-      const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
-
-      if (lpAmount.gt(0)) {
-        renderLpPrice(
-          token,
-          'DOP',
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(stockAmount)).toFixed(4)),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(dopAmount)).toFixed(2)),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lpAmount)).toFixed(2)),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
-          formatUsd(unlockedTwinValue),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
-          formatUsd(lockedTwinValue),
-          formatUsd(lpValue)
-        )
-      }
-
-      return [lpValue, pendingTwin]
-    }),
-  ]).then(async (results) => {
-    const totalValue = results.map((r) => r[0]).reduce((sum, value) => sum.add(value))
-    const totalPendingTwins = results.map((r) => r[1]).reduce((sum, value) => sum.add(value))
-
-    const dollyPrice = await getOracleDollyPrice()
-    const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
-    const unlockedTwin = totalPendingTwins.mul(20).div(100)
-    const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
-    const lockedTwin = totalPendingTwins.mul(80).div(100)
-    const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
-
-    renderLpTotalValue(
-      new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
-      formatUsd(unlockedTwinValue),
-      new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
-      formatUsd(lockedTwinValue),
-      formatUsd(totalValue)
-    )
-
-    $('#lp_holdings .loading').hide()
-  })
-
-  getUserLoans().then((loans) => {
-    loans.forEach((loan) => {
-      const COLLATERAL_THRESHOLD = ethers.utils.parseEther('0.01')
-      const { loanToken, collateralToken, principal, collateral, maintenanceMargin, currentMargin } = loan
-
-      if (collateral.lt(COLLATERAL_THRESHOLD)) return
-
-      const loanTokenSymbol = objectFlip(TOKENS)[loanToken]
-      const collateralTokenSymbol = objectFlip(TOKENS)[collateralToken]
-
-      let margin = currentMargin.sub(maintenanceMargin)
-      if (margin.lt(0)) {
-        margin = ethers.utils.parseEther('0')
-      }
-
-      renderMintPosition(
-        loanTokenSymbol,
-        Number(ethers.utils.formatEther(principal)).toFixed(5),
-        collateralTokenSymbol,
-        Number(ethers.utils.formatEther(collateral)).toFixed(2),
-        Number(ethers.utils.formatEther(maintenanceMargin)).toFixed(2),
-        Number(ethers.utils.formatEther(margin)).toFixed(2)
+  
+      renderLpTotalValue(
+        new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
+        formatUsd(unlockedTwinValue),
+        new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
+        formatUsd(lockedTwinValue),
+        formatUsd(totalValue)
       )
+  
+      $('#lp_holdings .loading').hide()
     })
+  }
 
-    $('#mint_positions .loading').hide()
-  })
+  mintPositionRender = () => {
+    $('#mint_positions > tbody > tr:not(.loading)').remove()
+    $('#mint_positions .loading').show()
+    getUserLoans().then((loans) => {
+      loans.forEach((loan) => {
+        const COLLATERAL_THRESHOLD = ethers.utils.parseEther('0.01')
+        const { loanToken, collateralToken, principal, collateral, maintenanceMargin, currentMargin } = loan
+  
+        if (collateral.lt(COLLATERAL_THRESHOLD)) return
+  
+        const loanTokenSymbol = objectFlip(TOKENS)[loanToken]
+        const collateralTokenSymbol = objectFlip(TOKENS)[collateralToken]
+  
+        let margin = currentMargin.sub(maintenanceMargin)
+        if (margin.lt(0)) {
+          margin = ethers.utils.parseEther('0')
+        }
+  
+        renderMintPosition(
+          loanTokenSymbol,
+          Number(ethers.utils.formatEther(principal)).toFixed(5),
+          collateralTokenSymbol,
+          Number(ethers.utils.formatEther(collateral)).toFixed(2),
+          Number(ethers.utils.formatEther(maintenanceMargin)).toFixed(2),
+          Number(ethers.utils.formatEther(margin)).toFixed(2)
+        )
+      })
+  
+      $('#mint_positions .loading').hide()
+    })
+  }
 
-  getOracleDollyPrice().then(async (dollyPrice) => {
-    const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
-    const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
-
-    $('#twin_price').text(`${formatUsd(twinPrice)}`)
-    $('#dop_price').text(`${formatUsd(dopPrice)}`)
-  })
+  priceUpdate = () => {
+    getOracleDollyPrice().then(async (dollyPrice) => {
+      const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+      const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
+  
+      $('#twin_price').text(`${formatUsd(twinPrice)}`)
+      $('#dop_price').text(`${formatUsd(dopPrice)}`)
+    })
+  }
 
   getLockedTWINAmount(getAddressInQueryString()).then(async (lockedAmount) => {
     const amount = Number(ethers.utils.formatEther(lockedAmount)).toFixed(2)
@@ -517,6 +534,75 @@ ${lockedTwin} <span class="approx-value">(${lockedTwinValue})</span></td><td cla
       return new bootstrap.Tooltip(tooltipTriggerEl)
     })
   })()
+
+  
+
+  let autoStockPriceTimer = null
+  let autoMintPositionTimer = null
+  let autoLPHoldingTimer = null
+  $("#lp-holding-refresh-button").on('click', (e) => {
+    if ($(e.currentTarget).hasClass('active')) {
+      $(e.currentTarget).removeClass('active')
+      clearTimeout(autoLPHoldingTimer)
+    } else {
+      $(e.currentTarget).addClass('active')
+      setTimeoutLPHolding()
+    }
+  })
+
+  setTimeoutLPHolding = () => {
+    autoLPHoldingTimer = setTimeout(() => {
+      lpHoldingsRender()
+      setTimeoutLPHolding()
+    }, REFRESH_TIMEOUT)
+  }
+
+  $("#stock-price-refresh-button").on('click', (e) => {
+    if ($(e.currentTarget).hasClass('active')) {
+      $(e.currentTarget).removeClass('active')
+      clearTimeout(autoStockPriceTimer)
+    } else {
+      $(e.currentTarget).addClass('active')
+      setTimeoutStockPrice()
+    }
+  })
+
+  setTimeoutStockPrice = () => {
+    autoStockPriceTimer = setTimeout(() => {
+      stockPriceRender()
+      setTimeoutStockPrice()
+    }, REFRESH_TIMEOUT)
+  }
+
+  $("#mint-position-refresh-button").on('click', (e) => {
+    if ($(e.currentTarget).hasClass('active')) {
+      $(e.currentTarget).removeClass('active')
+      clearTimeout(autoMintPositionTimer)
+    } else {
+      $(e.currentTarget).addClass('active')
+      setTimeoutMintPosition()
+    }
+  })
+
+  setTimeoutMintPosition = () => {
+    autoMintPositionTimer = setTimeout(() => {
+      mintPositionRender()
+      setTimeoutMintPosition()
+    }, REFRESH_TIMEOUT)
+  }
+
+  setTimeoutPriceUpdate = () => {
+    setTimeout(() => {
+      priceUpdate()
+      setTimeoutPriceUpdate()
+    }, REFRESH_TIMEOUT_PRICE)
+  }
+
+  stockPriceRender()
+  lpHoldingsRender()
+  mintPositionRender()
+  priceUpdate()
+  setTimeoutPriceUpdate()
 
   return
 })()
