@@ -30,8 +30,8 @@ const AddressForm = () => {
 
 const Header = () => {
   return (
-    <Container>
-      <Navbar variant="dark" expand="lg" className="mt-2">
+    <Container style={{ minHeight: '6vh' }}>
+      <Navbar variant="dark" expand="lg">
         <Navbar.Brand href="#">
           <b
             style={{

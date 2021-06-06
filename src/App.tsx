@@ -23,7 +23,7 @@ const App = () => {
   return (
     <>
       <Header />
-      <Container className="mt-3 mb-5">
+      <Container className="pb-5" style={{ minHeight: '88vh' }}>
         <Row>
           <Col md="6" lg="3">
             <PriceCard symbol="TWIN" price={twinPrice} />
