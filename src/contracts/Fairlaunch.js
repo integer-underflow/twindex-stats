@@ -1,39 +1,39 @@
-const FAIRLAUNCH_ABI = [
+export default [
   {
     inputs: [
       {
         internalType: 'contract TwinToken',
         name: '_twin',
-        type: 'address',
+        type: 'address'
       },
       {
         internalType: 'address',
         name: '_devaddr',
-        type: 'address',
+        type: 'address'
       },
       {
         internalType: 'uint256',
         name: '_twinPerBlock',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: '_startBlock',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: '_bonusLockupBps',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: '_bonusEndBlock',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'nonpayable',
-    type: 'constructor',
+    type: 'constructor'
   },
   {
     anonymous: false,
@@ -42,23 +42,23 @@ const FAIRLAUNCH_ABI = [
         indexed: true,
         internalType: 'address',
         name: 'user',
-        type: 'address',
+        type: 'address'
       },
       {
         indexed: true,
         internalType: 'uint256',
         name: 'pid',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         indexed: false,
         internalType: 'uint256',
         name: 'amount',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'Deposit',
-    type: 'event',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -67,23 +67,23 @@ const FAIRLAUNCH_ABI = [
         indexed: true,
         internalType: 'address',
         name: 'user',
-        type: 'address',
+        type: 'address'
       },
       {
         indexed: true,
         internalType: 'uint256',
         name: 'pid',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         indexed: false,
         internalType: 'uint256',
         name: 'amount',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'EmergencyWithdraw',
-    type: 'event',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -92,17 +92,17 @@ const FAIRLAUNCH_ABI = [
         indexed: true,
         internalType: 'address',
         name: 'previousOwner',
-        type: 'address',
+        type: 'address'
       },
       {
         indexed: true,
         internalType: 'address',
         name: 'newOwner',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'OwnershipTransferred',
-    type: 'event',
+    type: 'event'
   },
   {
     anonymous: false,
@@ -111,46 +111,46 @@ const FAIRLAUNCH_ABI = [
         indexed: true,
         internalType: 'address',
         name: 'user',
-        type: 'address',
+        type: 'address'
       },
       {
         indexed: true,
         internalType: 'uint256',
         name: 'pid',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         indexed: false,
         internalType: 'uint256',
         name: 'amount',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'Withdraw',
-    type: 'event',
+    type: 'event'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '_allocPoint',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'address',
         name: '_stakeToken',
-        type: 'address',
+        type: 'address'
       },
       {
         internalType: 'bool',
         name: '_withUpdate',
-        type: 'bool',
-      },
+        type: 'bool'
+      }
     ],
     name: 'addPool',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -159,11 +159,11 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -172,11 +172,11 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -185,34 +185,34 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'address',
         name: '_for',
-        type: 'address',
+        type: 'address'
       },
       {
         internalType: 'uint256',
         name: '_pid',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: '_amount',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'deposit',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -221,105 +221,105 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'address',
         name: '',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '_pid',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'emergencyWithdraw',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '_lastRewardBlock',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: '_currentBlock',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'getMultiplier',
     outputs: [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '_pid',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'harvest',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'address',
         name: '_stakeToken',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'isDuplicatedPool',
     outputs: [
       {
         internalType: 'bool',
         name: '',
-        type: 'bool',
-      },
+        type: 'bool'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'address',
         name: '_to',
-        type: 'address',
+        type: 'address'
       },
       {
         internalType: 'uint256',
         name: '_amount',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'manualMint',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
     name: 'massUpdatePools',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -328,74 +328,74 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'address',
         name: '',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '_pid',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'address',
         name: '_user',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'pendingTwin',
     outputs: [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'poolInfo',
     outputs: [
       {
         internalType: 'address',
         name: 'stakeToken',
-        type: 'address',
+        type: 'address'
       },
       {
         internalType: 'uint256',
         name: 'allocPoint',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: 'lastRewardBlock',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: 'accTwinPerShare',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: 'accTwinPerShareTilBonusEnd',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -404,90 +404,90 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
     name: 'renounceOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '_bonusMultiplier',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: '_bonusEndBlock',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: '_bonusLockUpBps',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'setBonus',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'address',
         name: '_devaddr',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'setDev',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '_pid',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: '_allocPoint',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'bool',
         name: '',
-        type: 'bool',
-      },
+        type: 'bool'
+      }
     ],
     name: 'setPool',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '_twinPerBlock',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'setTwinPerBlock',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -496,11 +496,11 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -509,24 +509,24 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'address',
         name: 'newOwner',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'transferOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -535,11 +535,11 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'contract TwinToken',
         name: '',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [],
@@ -548,103 +548,103 @@ const FAIRLAUNCH_ABI = [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '_pid',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'updatePool',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'uint256',
         name: '',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'address',
         name: '',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     name: 'userInfo',
     outputs: [
       {
         internalType: 'uint256',
         name: 'amount',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: 'rewardDebt',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: 'bonusDebt',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'address',
         name: 'fundedBy',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     stateMutability: 'view',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'address',
         name: '_for',
-        type: 'address',
+        type: 'address'
       },
       {
         internalType: 'uint256',
         name: '_pid',
-        type: 'uint256',
+        type: 'uint256'
       },
       {
         internalType: 'uint256',
         name: '_amount',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'withdraw',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+    type: 'function'
   },
   {
     inputs: [
       {
         internalType: 'address',
         name: '_for',
-        type: 'address',
+        type: 'address'
       },
       {
         internalType: 'uint256',
         name: '_pid',
-        type: 'uint256',
-      },
+        type: 'uint256'
+      }
     ],
     name: 'withdrawAll',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
+    type: 'function'
+  }
 ]
