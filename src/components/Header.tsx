@@ -1,9 +1,24 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Container, Nav, Navbar, Form, Button, InputGroup } from 'react-bootstrap'
 import { getAddressInQueryString } from '../modules/Utils'
 
 const AddressForm = () => {
   const [address, setAddress] = useState(getAddressInQueryString() ?? '')
+
+  const handleSearch = useCallback(() => {
+    window.location.href = `?address=${address}`
+  }, [address])
+
+  const handleWalletConnect = useCallback(async () => {
+    if (typeof (window as any).ethereum !== 'undefined') {
+      // @ts-ignore
+      const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
+      const account = accounts[0]
+      window.location.href = `?address=${account}`
+    } else {
+      alert('MetaMask is not installed!')
+    }
+  }, [])
 
   return (
     <Form inline>
@@ -19,11 +34,15 @@ const AddressForm = () => {
           size="sm"
         />
         <InputGroup.Append>
-          <Button variant="primary" size="sm" type="submit">
+          <Button variant="primary" size="sm" type="button" name="search" onClick={handleSearch}>
             <i className="fa fa-search" />
           </Button>
         </InputGroup.Append>
       </InputGroup>
+
+      <Button variant="primary" size="sm" className="ml-2" type="button" onClick={handleWalletConnect}>
+        Connect to a wallet
+      </Button>
     </Form>
   )
 }
