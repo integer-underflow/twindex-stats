@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="90" height="55" viewBox="0 0 90 55">
+    <defs>
+        <clipPath id="clip-path">
+            <circle id="Ellipse_79" cx="26.24" cy="26.24" r="26.24" fill="#5d95c7"/>
+        </clipPath>
+        <clipPath id="clip-path-2">
+            <path id="Path_3063" d="M26.76 12.382H14.729v4.988h6.925c-.646 3.169-3.345 4.988-6.925 4.988a7.629 7.629 0 0 1 0-15.259 7.464 7.464 0 0 1 4.754 1.7l3.756-3.756a12.9 12.9 0 1 0-8.51 22.595c6.456 0 12.324-4.695 12.324-12.911a10.711 10.711 0 0 0-.293-2.345z" transform="translate(-1.818 -1.818)"/>
+        </clipPath>
+        <style>
+            .cls-5{clip-path:url(#clip-path-2)}
+        </style>
+    </defs>
+    <g id="dop-googl" transform="translate(.599 -4.569)">
+        <path id="bg" fill="none" d="M0 0H90V55H0z" transform="translate(-.599 4.569)"/>
+        <g id="GOOGL" transform="translate(-412.783 -684.201) translate(448 690.486)">
+            <circle id="bg-2" cx="26.24" cy="26.24" r="26.24" fill="#f3f4f6"/>
+            <g id="icon" clip-path="url(#clip-path)">
+                <g id="Google__G__Logo" transform="translate(13.622 13.329)">
+                    <g id="Group_849" class="cls-5">
+                        <path id="Path_3062" fill="#fbbc05" d="M0 25.259V10l9.977 7.629z" transform="translate(-1.174 -4.718)"/>
+                    </g>
+                    <g id="Group_850" class="cls-5">
+                        <path id="Path_3064" fill="#ea4335" d="M0 6.456l9.977 7.629 4.108-3.58L28.17 8.216V0H0z" transform="translate(-1.174 -1.174)"/>
+                    </g>
+                    <g id="Group_851" class="cls-5">
+                        <path id="Path_3066" fill="#34a853" d="M0 21.714l17.606-13.5 4.636.587L28.17 0v28.17H0z" transform="translate(-1.174 -1.174)"/>
+                    </g>
+                    <g id="Group_852" class="cls-5">
+                        <path id="Path_3068" fill="#4285f4" d="M32.359 31.714L14.166 17.629l-2.347-1.761L32.359 10z" transform="translate(-5.363 -4.718)"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+        <g id="DOP" transform="translate(.082 -.347)">
+            <circle id="Ellipse_20" cx="26" cy="26" r="26" fill="#3ab2e6" transform="translate(1.319 6.916)"/>
+            <g id="icon-2" fill="#fff" transform="translate(11.01 18.236)">
+                <path id="Path_360" d="M29.485 25.88l-3.963-6.863H8.055a5.356 5.356 0 0 1-4.078-3.088 5.915 5.915 0 0 0 .789 3.088l1.124 1.946 4.273 7.4a5.413 5.413 0 0 0 4.688 2.707h10.791a5.921 5.921 0 0 0 3.328-1.026c.019-.034 1.449-2.544.515-4.164z" transform="translate(-3.976 -1.043)"/>
+                <path id="Path_361" d="M25.4 22.273l-5.249-9.091a5.913 5.913 0 0 0-1.928-2.019c-.118-.035-3.21-.925-4.294.952l-4.156 7.2L14.9 28.2l3.965 6.863c.935 1.621-.494 4.129-.514 4.165a5.917 5.917 0 0 0 1.8-1.936l.786-1.362L25.4 28.2a5.921 5.921 0 0 0 0-5.922z" opacity="0.6" transform="translate(6.645 -10.221)"/>
+                <path id="Path_362" d="M25.641 10.675h-10.5a5.921 5.921 0 0 0-5.128 2.961l-5.247 9.091a5.913 5.913 0 0 0-.789 2.836C4.24 27.738 7.3 28.651 7.3 28.651h7.966l5.128-8.883 4.155-7.2c1.084-1.877 4.176-.986 4.294-.951a5.916 5.916 0 0 0-3.202-.942z" opacity="0.8" transform="translate(-3.975 -10.675)"/>
+            </g>
+        </g>
+    </g>
+</svg>
