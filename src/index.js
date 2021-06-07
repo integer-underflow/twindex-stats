@@ -22,15 +22,21 @@ import {
 } from './network'
 import { getDiff, getAddressInQueryString, formatUsd, objectFlip } from './helpers'
 
-$(function () {
+$(async function () {
   $('#wallet_address').val(getAddressInQueryString())
+
+  const dollyPrice = await getOracleDollyPrice()
+  const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
+  const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+
+  $('#twin_price').text(`${formatUsd(twinPrice)}`)
+  $('#dop_price').text(`${formatUsd(dopPrice)}`)
 
   // Stock Price
   Promise.all(
     Object.entries(TOKENS).map(async ([token, address]) => {
       if (token === 'DOLLY' || token === 'DOP' || token === 'TWIN') return
 
-      const dollyPrice = await getOracleDollyPrice()
       const stockPrice = await getTokenPriceWithDollyPair(address, dollyPrice)
       const oracleStockPrice = await getOracleStockPrice(address, dollyPrice)
       const diff = getDiff(stockPrice, oracleStockPrice)
@@ -44,7 +50,6 @@ $(function () {
   Promise.all([
   // Stock - DOLLY LP
     ...Object.entries(STOCK_DOLLY_PAIRS).map(async ([token, pairAddress]) => {
-      const dollyPrice = await getOracleDollyPrice()
       const stockPrice = await getTokenPriceWithDollyPair(TOKENS[token], dollyPrice)
       const [totalStockReserve, totalDollyReserve] = await getReserves(pairAddress)
       const totalSupply = await getTotalLpSupply(pairAddress)
@@ -54,11 +59,7 @@ $(function () {
       const [stockAmount, dollyAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDollyReserve)
 
       const pendingTwin = await getPendingTwin(getPoolIdFromPairAddress(pairAddress), getAddressInQueryString())
-      const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
-      const unlockedTwin = pendingTwin.mul(20).div(100)
-      const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
-      const lockedTwin = pendingTwin.mul(80).div(100)
-      const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+      const pendingTwinValue = pendingTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
       if (lpAmount.gt(0)) {
         renderLpPrice(
@@ -67,10 +68,8 @@ $(function () {
           new Intl.NumberFormat().format(Number(ethers.utils.formatEther(stockAmount)).toFixed(4)),
           new Intl.NumberFormat().format(Number(ethers.utils.formatEther(dollyAmount)).toFixed(2)),
           new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lpAmount)).toFixed(2)),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
-          formatUsd(unlockedTwinValue),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
-          formatUsd(lockedTwinValue),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(pendingTwin)).toFixed(2)),
+          formatUsd(pendingTwinValue),
           formatUsd(lpValue)
         )
       }
@@ -79,8 +78,6 @@ $(function () {
     }),
     // TWIN, Stock - DOP LP
     ...Object.entries(STOCK_DOP_PAIRS).map(async ([token, pairAddress]) => {
-      const dollyPrice = await getOracleDollyPrice()
-      const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
       let tokenPrice
       if (token === 'TWIN') {
         tokenPrice = await getTokenPriceWithDopPair(TOKENS[token], dollyPrice)
@@ -104,11 +101,7 @@ $(function () {
       const [stockAmount, dopAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDopReserve)
 
       const pendingTwin = await getPendingTwin(getPoolIdFromPairAddress(pairAddress), getAddressInQueryString())
-      const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
-      const unlockedTwin = pendingTwin.mul(20).div(100)
-      const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
-      const lockedTwin = pendingTwin.mul(80).div(100)
-      const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+      const pendingTwinValue = pendingTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
       if (lpAmount.gt(0)) {
         renderLpPrice(
@@ -117,10 +110,8 @@ $(function () {
           new Intl.NumberFormat().format(Number(ethers.utils.formatEther(stockAmount)).toFixed(4)),
           new Intl.NumberFormat().format(Number(ethers.utils.formatEther(dopAmount)).toFixed(2)),
           new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lpAmount)).toFixed(2)),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
-          formatUsd(unlockedTwinValue),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
-          formatUsd(lockedTwinValue),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(pendingTwin)).toFixed(2)),
+          formatUsd(pendingTwinValue),
           formatUsd(lpValue)
         )
       }
@@ -129,27 +120,19 @@ $(function () {
     })
   ]).then(async (results) => {
     const totalValue = results.map((r) => r[0]).reduce((sum, value) => sum.add(value))
-    const totalPendingTwins = results.map((r) => r[1]).reduce((sum, value) => sum.add(value))
-
-    const dollyPrice = await getOracleDollyPrice()
-    const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
-    const unlockedTwin = totalPendingTwins.mul(20).div(100)
-    const unlockedTwinValue = unlockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
-    const lockedTwin = totalPendingTwins.mul(80).div(100)
-    const lockedTwinValue = lockedTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+    const totalPendingTwin = results.map((r) => r[1]).reduce((sum, value) => sum.add(value))
+    const totalPendingTwinValue = totalPendingTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
     renderLpTotalValue(
-      new Intl.NumberFormat().format(Number(ethers.utils.formatEther(unlockedTwin)).toFixed(2)),
-      formatUsd(unlockedTwinValue),
-      new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lockedTwin)).toFixed(2)),
-      formatUsd(lockedTwinValue),
+      new Intl.NumberFormat().format(Number(ethers.utils.formatEther(totalPendingTwin)).toFixed(2)),
+      formatUsd(totalPendingTwinValue),
       formatUsd(totalValue)
     )
 
     $('#lp_holdings .loading').hide()
   })
 
-  getUserLoans().then((loans) => {
+  getUserLoans().then(loans => {
     loans.forEach((loan) => {
       const COLLATERAL_THRESHOLD = ethers.utils.parseEther('0.01')
       const { loanToken, collateralToken, principal, collateral, maintenanceMargin, currentMargin } = loan
@@ -177,45 +160,12 @@ $(function () {
     $('#mint_positions .loading').hide()
   })
 
-  getOracleDollyPrice().then(async (dollyPrice) => {
-    const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
-    const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
-
-    $('#twin_price').text(`${formatUsd(twinPrice)}`)
-    $('#dop_price').text(`${formatUsd(dopPrice)}`)
-  })
-
   getLockedTwinAmount(getAddressInQueryString()).then(async (lockedAmount) => {
     const amount = Number(ethers.utils.formatEther(lockedAmount)).toFixed(2)
-    const dollyPrice = await getOracleDollyPrice()
-    const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
     const valueInUsd = lockedAmount.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
     $('#locked_twin').html(`${amount} <span class="approx-value">(${formatUsd(valueInUsd)})</span>`)
   })
-
-  function renderLpPrice (
-    token0Symbol,
-    token1Symbol,
-    token0Amount,
-    token1Amount,
-    lpAmount,
-    unlockedTwin,
-    unlockedTwinValue,
-    lockedTwin,
-    lockedTwinValue,
-    lpValue
-  ) {
-    $('#lp_holdings tbody').prepend(
-      `<tr><td>${token0Symbol}-${token1Symbol} LP</td><td class="text-end">${lpAmount} LP</td><td class="text-center">${token0Amount} <img alt="${token0Symbol}" src="${getLogoByTokenSymbol(
-        token0Symbol
-      )}"><br>${token1Amount} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(
-        token1Symbol
-      )}"></td><td class="text-center"><i class="bi bi-unlock"></i>
-${unlockedTwin} <span class="approx-value">(${unlockedTwinValue})</span><br><i class="bi bi-lock-fill"></i>
-${lockedTwin} <span class="approx-value">(${lockedTwinValue})</span></td><td class="text-end">${lpValue}</td></tr>`
-    )
-  }
 
   $('#buy_me_coffee_address').on('click', e => {
     e.preventDefault()
@@ -267,11 +217,33 @@ ${lockedTwin} <span class="approx-value">(${lockedTwinValue})</span></td><td cla
     })
   })()
 
-  function renderLpTotalValue (unlockedTwin, unlockedTwinValue, lockedTwin, lockedTwinValue, lpValue) {
+  function renderLpPrice (
+    token0Symbol,
+    token1Symbol,
+    token0Amount,
+    token1Amount,
+    lpAmount,
+    pendingTwin,
+    pendingTwinValue,
+    lpValue
+  ) {
+    $('#lp_holdings tbody').prepend(
+      `<tr>
+      <td>${token0Symbol}-${token1Symbol} LP</td>
+      <td class="text-end">${lpAmount} LP</td>
+      <td class="text-center">${token0Amount} <img alt="${token0Symbol}" src="${getLogoByTokenSymbol(token0Symbol)}"><br>
+      ${token1Amount} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(token1Symbol)}"></td>
+      <td class="text-center">${pendingTwin} <span class="approx-value">(${pendingTwinValue})</span></td>
+      <td class="text-end">${lpValue}</td></tr>`
+    )
+  }
+
+  function renderLpTotalValue (pendingTwin, pendingTwinValue, lpValue) {
     $('#lp_holdings tbody').append(
-      `<tr class="table-secondary"><td colspan="3" class="text-start">Total Value</td><td class="text-center"><i class="bi bi-unlock"></i>
-${unlockedTwin} <span class="approx-value">(${unlockedTwinValue})</span><br><i class="bi bi-lock-fill"></i>
-${lockedTwin} <span class="approx-value">(${lockedTwinValue})</span></td><td class="text-end">${lpValue}</td></tr>`
+      `<tr class="table-secondary">
+      <td colspan="3" class="text-start">Total Value</td>
+      <td class="text-center">${pendingTwin} <span class="approx-value">(${pendingTwinValue})</span></td>
+      <td class="text-end">${lpValue}</td></tr>`
     )
   }
 

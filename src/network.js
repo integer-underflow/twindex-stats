@@ -123,15 +123,20 @@ export async function getPendingTwin (poolId, walletAddress) {
   return pendingTwin
 }
 
+export async function getUserInfo (poolId, walletAddress) {
+  const fairlaunch = new ethers.Contract(TWINDEX.fairlaunch, FAIRLAUNCH_ABI, provider)
+  const userInfo = await fairlaunch.userInfo(poolId, walletAddress)
+
+  return userInfo
+}
+
 export async function getLpAmount (pairAddress, walletAddress) {
   if (!walletAddress) return ethers.utils.parseEther('0')
 
   const twindexPair = new ethers.Contract(pairAddress, IUNISWAP_V2_PAIR_ABI, provider)
   const lpAmountInWallet = (await twindexPair.functions.balanceOf(walletAddress))[0]
 
-  const fairlaunch = new ethers.Contract(TWINDEX.fairlaunch, FAIRLAUNCH_ABI, provider)
-  const userInfo = await fairlaunch.userInfo(getPoolIdFromPairAddress(pairAddress), walletAddress)
-  const lpAmountInPool = userInfo.amount
+  const lpAmountInPool = (await getUserInfo(getPoolIdFromPairAddress(pairAddress), walletAddress)).amount
 
   return lpAmountInWallet.add(lpAmountInPool)
 }
