@@ -132,7 +132,7 @@ $(async function () {
     $('#lp_holdings .loading').hide()
   })
 
-  getUserLoans().then(loans => {
+  getUserLoans(getAddressInQueryString()).then(loans => {
     loans.forEach((loan) => {
       const COLLATERAL_THRESHOLD = ethers.utils.parseEther('0.01')
       const { loanToken, collateralToken, principal, collateral, maintenanceMargin, currentMargin } = loan
