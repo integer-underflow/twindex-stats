@@ -18,7 +18,8 @@ import {
   getUserLoans,
   getLockedTwinAmount,
   getCurrentBlockNumber,
-  secondsUntilBlock
+  secondsUntilBlock,
+  getUserInfo
 } from './network'
 import { getDiff, getAddressInQueryString, formatUsd, objectFlip } from './helpers'
 
@@ -117,7 +118,28 @@ $(async function () {
       }
 
       return [lpValue, pendingTwin]
-    })
+    }),
+    // TWIN pool
+    (async () => {
+      const TWIN_POOL_ID = 9
+
+      const twinAmountInPool = (await getUserInfo(TWIN_POOL_ID, getAddressInQueryString())).amount
+      const twinAmountInPoolValue = twinAmountInPool.mul(twinPrice).div(ethers.utils.parseEther('1'))
+
+      const pendingTwin = await getPendingTwin(TWIN_POOL_ID, getAddressInQueryString())
+      const pendingTwinValue = pendingTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
+
+      if (twinAmountInPool.gt(0)) {
+        renderTwinPoolPrice(
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(twinAmountInPool)).toFixed(2)),
+          formatUsd(twinAmountInPoolValue),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(pendingTwin)).toFixed(2)),
+          formatUsd(pendingTwinValue)
+        )
+      }
+
+      return [twinAmountInPoolValue, pendingTwin]
+    })()
   ]).then(async (results) => {
     const totalValue = results.map((r) => r[0]).reduce((sum, value) => sum.add(value))
     const totalPendingTwin = results.map((r) => r[1]).reduce((sum, value) => sum.add(value))
@@ -235,6 +257,22 @@ $(async function () {
       ${token1Amount} <img alt="${token1Symbol}" src="${getLogoByTokenSymbol(token1Symbol)}"></td>
       <td class="text-center">${pendingTwin} <span class="approx-value">(${pendingTwinValue})</span></td>
       <td class="text-end">${lpValue}</td></tr>`
+    )
+  }
+
+  function renderTwinPoolPrice (
+    twinInPool,
+    twinInPoolValue,
+    pendingTwin,
+    pendingTwinValue
+  ) {
+    $('#lp_holdings tbody').prepend(
+      `<tr>
+      <td>TWIN</td>
+      <td class="text-end">${twinInPool} TWIN</td>
+      <td class="text-center">${twinInPool} <img alt="TWIN" src="${getLogoByTokenSymbol('TWIN')}"></td>
+      <td class="text-center">${pendingTwin} <span class="approx-value">(${pendingTwinValue})</span></td>
+      <td class="text-end">${twinInPoolValue}</td></tr>`
     )
   }
 
