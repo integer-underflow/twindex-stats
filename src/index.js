@@ -214,24 +214,6 @@ $(async function () {
     }
   })
 
-  getCurrentBlockNumber().then(currentBlockNumber => {
-    const TWIN_UNLOCK_BLOCK_NUMBER = 8763010
-
-    $('#countdown-unlock-twin').countdown(
-      new Date(new Date().valueOf() + secondsUntilBlock(currentBlockNumber, TWIN_UNLOCK_BLOCK_NUMBER)),
-      function (event) {
-        $(this).html(
-          event.strftime(
-            '<span class="display-6">%D</span> Day%!d' +
-              '<span class="display-6">%H</span> Hr' +
-              '<span class="display-6">%M</span> Min' +
-              '<span class="display-6">%S</span> Sec'
-          )
-        )
-      }
-    )
-  })
-
   ;(() => {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     tooltipTriggerList.map(function (tooltipTriggerEl) {
