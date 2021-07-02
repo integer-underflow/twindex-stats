@@ -2,23 +2,19 @@ import { ethers } from 'ethers'
 import {
   TOKENS,
   STOCK_DOLLY_PAIRS,
-  STOCK_DOP_PAIRS,
+  TWIN_PAIRS,
   getOracleDollyPrice,
   getTokenPriceWithDollyPair,
-  getOracleStockPrice,
+  getOraclePrice,
   getReserves,
   getTotalLpSupply,
   getLpPrice,
   getLpAmount,
   getUnderlyingAssetsOfLps,
   getPendingTwin,
-  getTokenPriceWithDopPair,
   getPoolIdFromPairAddress,
-  getTokenAddressesFromPair,
   getUserLoans,
   getLockedTwinAmount,
-  getCurrentBlockNumber,
-  secondsUntilBlock,
   getUserInfo
 } from './network'
 import { getDiff, getAddressInQueryString, formatUsd, objectFlip } from './helpers'
@@ -28,7 +24,7 @@ $(async function () {
 
   const dollyPrice = await getOracleDollyPrice()
   const dopPrice = await getTokenPriceWithDollyPair(TOKENS.DOP, dollyPrice)
-  const twinPrice = await getTokenPriceWithDopPair(TOKENS.TWIN, dollyPrice)
+  const twinPrice = await getTokenPriceWithDollyPair(TOKENS.TWIN, dollyPrice)
 
   $('#twin_price').text(`${formatUsd(twinPrice)}`)
   $('#dop_price').text(`${formatUsd(dopPrice)}`)
@@ -36,10 +32,10 @@ $(async function () {
   // Stock Price
   Promise.all(
     Object.entries(TOKENS).map(async ([token, address]) => {
-      if (token === 'DOLLY' || token === 'DOP' || token === 'TWIN') return
+      if (['DOLLY', 'DOP', 'TWIN', 'WBNB'].includes(token)) return
 
       const stockPrice = await getTokenPriceWithDollyPair(address, dollyPrice)
-      const oracleStockPrice = await getOracleStockPrice(address, dollyPrice)
+      const oracleStockPrice = await getOraclePrice(address, dollyPrice)
       const diff = getDiff(stockPrice, oracleStockPrice)
 
       renderStockDiff(token, formatUsd(stockPrice), formatUsd(oracleStockPrice), Number(ethers.utils.formatEther(diff)).toFixed(2) + '%')
@@ -77,39 +73,34 @@ $(async function () {
 
       return [lpValue, pendingTwin]
     }),
-    // TWIN, Stock - DOP LP
-    ...Object.entries(STOCK_DOP_PAIRS).map(async ([token, pairAddress]) => {
+    // TWIN - XXX LP
+    ...Object.entries(TWIN_PAIRS).map(async ([token, pairAddress]) => {
       let tokenPrice
-      if (token === 'TWIN') {
-        tokenPrice = await getTokenPriceWithDopPair(TOKENS[token], dollyPrice)
+      if (token === 'WBNB') {
+        tokenPrice = await getOraclePrice(TOKENS.WBNB, dollyPrice)
+      } else if (token === 'DOLLY') {
+        tokenPrice = dollyPrice
       } else {
         tokenPrice = await getTokenPriceWithDollyPair(TOKENS[token], dollyPrice)
       }
       const totalSupply = await getTotalLpSupply(pairAddress)
-      const [token0] = await getTokenAddressesFromPair(pairAddress)
 
-      let totalStockReserve, totalDopReserve, lpPrice
-      if (TOKENS[token] === token0) {
-        ;[totalStockReserve, totalDopReserve] = await getReserves(pairAddress)
-        lpPrice = getLpPrice(totalSupply, tokenPrice, dopPrice, totalStockReserve, totalDopReserve)
-      } else {
-        ;[totalDopReserve, totalStockReserve] = await getReserves(pairAddress)
-        lpPrice = getLpPrice(totalSupply, dopPrice, tokenPrice, totalDopReserve, totalStockReserve)
-      }
+      const [totalTwinReserve, totalToken1Reserve] = await getReserves(pairAddress)
+      const lpPrice = getLpPrice(totalSupply, twinPrice, tokenPrice, totalTwinReserve, totalToken1Reserve)
 
       const lpAmount = await getLpAmount(pairAddress, getAddressInQueryString())
       const lpValue = lpPrice.mul(lpAmount).div(ethers.utils.parseEther('1'))
-      const [stockAmount, dopAmount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalStockReserve, totalDopReserve)
+      const [twinAmount, token1Amount] = getUnderlyingAssetsOfLps(totalSupply, lpAmount, totalTwinReserve, totalToken1Reserve)
 
       const pendingTwin = await getPendingTwin(getPoolIdFromPairAddress(pairAddress), getAddressInQueryString())
       const pendingTwinValue = pendingTwin.mul(twinPrice).div(ethers.utils.parseEther('1'))
 
       if (lpAmount.gt(0)) {
         renderLpPrice(
+          'TWIN',
           token,
-          'DOP',
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(stockAmount)).toFixed(4)),
-          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(dopAmount)).toFixed(2)),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(twinAmount)).toFixed(2)),
+          new Intl.NumberFormat().format(Number(ethers.utils.formatEther(token1Amount)).toFixed(2)),
           new Intl.NumberFormat().format(Number(ethers.utils.formatEther(lpAmount)).toFixed(2)),
           new Intl.NumberFormat().format(Number(ethers.utils.formatEther(pendingTwin)).toFixed(2)),
           formatUsd(pendingTwinValue),
@@ -293,9 +284,15 @@ $(async function () {
       GOOGL: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/googl-stock.svg',
       MSFT: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/msft-stock.svg',
       TSLA: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tsla-stock.svg',
+      COIN: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tokens/0xB23DC438b40cDb8a625Dc4f249734811F7DA9f9E.svg',
+      BIDU: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tokens/0x48D2854529183e1de3D36e29D437f8F6043AcE17.svg',
+      SPCE: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tokens/0x75bD0500548B49455D2Dfd86fa30Fba476Cb3895.svg',
+      SPY: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tokens/0xf2018b59F8f9BE020C12Cb0A2624200d9FBa2af1.svg',
+
       DOLLY: './assets/dolly.svg',
       DOP: './assets/dopple.svg',
-      TWIN: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tokens/0x3806aae953a3a873D02595f76C7698a57d4C7A57.svg'
+      TWIN: 'https://raw.githubusercontent.com/chawanvtp/Dopple/main/assets/tokens/0x3806aae953a3a873D02595f76C7698a57d4C7A57.svg',
+      WBNB: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png'
     }
 
     return LOGO[token]

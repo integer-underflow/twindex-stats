@@ -19,44 +19,55 @@ export const TOKENS = {
   GOOGL: '0x9C169647471C1C6a72773CfFc50F6Ba285684803',
   AMZN: '0x1085B90544ff5C421D528aAF79Cc65aFc920aC79',
   AAPL: '0xC10b2Ce6A2BCfdFDC8100Ba1602C1689997299D3',
+  COIN: '0xB23DC438b40cDb8a625Dc4f249734811F7DA9f9E',
+  BIDU: '0x48D2854529183e1de3D36e29D437f8F6043AcE17',
+  SPCE: '0x75bD0500548B49455D2Dfd86fa30Fba476Cb3895',
+  // SPY: '0xf2018b59f8f9be020c12cb0a2624200d9fba2af1',
   DOLLY: '0xfF54da7CAF3BC3D34664891fC8f3c9B6DeA6c7A5',
   DOP: '0x844FA82f1E54824655470970F7004Dd90546bB28',
-  TWIN: '0x3806aae953a3a873D02595f76C7698a57d4C7A57'
+  TWIN: '0x3806aae953a3a873D02595f76C7698a57d4C7A57',
+  WBNB: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
 }
 
 export const STOCK_DOLLY_PAIRS = {
   TSLA: '0xbde3b88c4D5926d5236447D1b12a866f1a38B2B7',
   GOOGL: '0xC38150a12D3C686f13D6e3A791d6301ed274B862',
   AMZN: '0x15C53425bd0b9bfEd3d4cCf27F4c4f1f7bBC838B',
-  AAPL: '0xb91d34BCdF77E13f70AfF4d86129d13389dE0802'
+  AAPL: '0xb91d34BCdF77E13f70AfF4d86129d13389dE0802',
+  COIN: '0x13F65fA2E9c9532125b752ED7A57Da87B4Dd4279',
+  BIDU: '0x65e79848699E9ef894C440206946087d31f6575C',
+  SPCE: '0xb07fC35D2318bF8FF31A3FdDF1e758e3450D98e2',
+  // SPY: '0x5d704aA3f49c57f0Da3b1db97114763cBD679333'
 }
 
-export const STOCK_DOP_PAIRS = {
-  TSLA: '0xb611aCe852f60F0ec039f851644a5bC5270AbF7b',
-  GOOGL: '0x7A00B2BB049176C9C74E5d7bF617F84dB4763aec',
-  AMZN: '0x4a1135768C6ce4b2a2F20DAc80DE661949161627',
-  AAPL: '0x2D4980c63962d4B9156a8974AEA7C7fd3121913A',
-  TWIN: '0x65A95C2BC5c12E8e30e24D322ff386249c29a072'
+export const TWIN_PAIRS = {
+  DOP: '0x65A95C2BC5c12E8e30e24D322ff386249c29a072',
+  DOLLY: '0x593747Cd0023669c7A67511406266559B166Ca5d',
+  WBNB: '0xC3BFdd2cd502e719132Bf7aA5954C74e9C7209F5'
 }
 
 export const TWINDEX_FAIRLAUNCH_POOL_IDS = {
+  // TWIN
   TWIN_DOP: 0,
-  TSLA_DOP: 1,
-  DOP_AAPL: 2,
-  AMZN_DOP: 3,
+  TWIN_DOLLY: 10,
+  TWIN_WBNB: 11,
+  // Stock
   TSLA_DOLLY: 4,
   AMZN_DOLLY: 5,
   AAPL_DOLLY: 6,
   GOOGL_DOLLY: 7,
-  DOP_GOOGL: 8
+  COIN_DOLLY: 12,
+  BIDU_DOLLY: 13,
+  SPCE_DOLLY: 14,
+  // SPY_DOLLY: 15
 }
 
 export function getPoolIdFromPairAddress (pairAddress) {
   let token = objectFlip(STOCK_DOLLY_PAIRS)[pairAddress]
   if (token) return TWINDEX_FAIRLAUNCH_POOL_IDS[`${token}_DOLLY`]
 
-  token = objectFlip(STOCK_DOP_PAIRS)[pairAddress]
-  if (token) return TWINDEX_FAIRLAUNCH_POOL_IDS[`${token}_DOP`] ?? TWINDEX_FAIRLAUNCH_POOL_IDS[`DOP_${token}`]
+  token = objectFlip(TWIN_PAIRS)[pairAddress]
+  if (token) return TWINDEX_FAIRLAUNCH_POOL_IDS[`TWIN_${token}`]
 
   return null
 }
@@ -173,9 +184,9 @@ export async function getPriceFromTwindexRouter (path, dollyPrice) {
   return amountOut.mul(dollyPrice).div(ethers.utils.parseEther('1'))
 }
 
-export async function getOracleStockPrice (stockAddress, dollyPrice) {
+export async function getOraclePrice (tokenAddress, dollyPrice) {
   const priceFeeds = new ethers.Contract(TWINDEX.price_feeds, PRICE_FEEDS_ABI, provider)
-  const [stockPriceInDolly, precision] = await priceFeeds.functions.queryRate(stockAddress, TOKENS.DOLLY)
+  const [stockPriceInDolly, precision] = await priceFeeds.functions.queryRate(tokenAddress, TOKENS.DOLLY)
 
   return stockPriceInDolly.mul(dollyPrice).div(precision)
 }
